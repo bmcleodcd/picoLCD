@@ -7,12 +7,12 @@ AM_LDFLAGS =
 
 if OS_LINUX
 AM_CFLAGS +=
-AM_LDFLAGS += -lrt
+AM_LDFLAGS += -lrt -lxdo
 endif
 
 if OS_MACOSX
 AM_CFLAGS += -D__MACOS__
-AM_LDFLAGS += 
+AM_LDFLAGS += -lxdo
 endif
 
 

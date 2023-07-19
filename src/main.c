@@ -7,6 +7,7 @@
 #include <stdlib.h>
 
 #include <time.h>
+#include <xdo.h>
 
 #include "picolcd.h"
 #include "rc5.h"
@@ -206,6 +207,9 @@ int main (int argc, char **argv)
 	    rc5decoder *rc5;
 	    rc5 = rc5_init();
 
+        xdo_t * x = xdo_new(":0");
+        useconds_t key_delay = 12000;
+
         int keydown = 0;
         int keydown0=0;
         int keydown1=0;
@@ -232,10 +236,7 @@ int main (int argc, char **argv)
                         system("sudo -u kodi /home/kodi/run-retroarch.sh");
                     }
                     else{
-                        char command[200] = "DISPLAY=:0 xdotool keyup ";
-                        strcat(command, keymap[keydown0]);
-                        fprintf(stderr, command);
-                        system(command);
+                        xdo_send_keysequence_window_up(x, CURRENTWINDOW,keymap[keydown0],key_delay);
                     }
 
                 }
@@ -247,11 +248,7 @@ int main (int argc, char **argv)
                 keydown1 = event->data[1];
 
                 if(keydown0 != 0x03){
-                    fprintf(stderr, "Key down %02x %02x %s\n ", keydown0, keydown1, keymap[keydown0]);
-                    char command[200] = "DISPLAY=:0 xdotool keydown ";
-                    strcat(command, keymap[keydown0]);
-                    fprintf(stderr, command);
-                    system(command);
+                    xdo_send_keysequence_window_down(x, CURRENTWINDOW,keymap[keydown0],key_delay);
                 }
             }
         }
@@ -273,6 +270,8 @@ int main (int argc, char **argv)
 		free(event->data);
 		free(event);
 	    }
+
+        xdo_free(x);
 	}	
 	
 	if (strncmp(s, "histo", 5) == 0) {
