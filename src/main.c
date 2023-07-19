@@ -16,6 +16,25 @@
 //#define DEBUG
 #undef DEBUG
 
+static const char* keymap[16] = {
+        "0x00", //0x00 ??
+        "XF86AudioRaiseVolume", //0x00 Plus button left of lcd screen
+        "XF86AudioLowerVolume", //0x02 Minus button left of lcd screen
+        "0x03", //0x03 F1 button
+        "0x04", //0x04 F2 button
+        "0x05", //0x05 F3 button
+        "0x06", //0x06 F4 button
+        "0x07", //0x07 F5 button
+        "Left", //0x08 Left button right of lcd screen
+        "Right", //0x08 Right button right of lcd screen
+        "Up", //0x0a Up button right of lcd screen
+        "Down", //0x0b Down button right of lcd screen
+        "Return", //0x0c OK button right of lcd screen
+        "0x0d", //0x0d ??
+        "0x0e", //0x0e ??
+        "0x0f", //0x0f ??
+};
+
 void usage (char *program)
 {
     printf ("Usage: %s [commands]\n", program);
@@ -205,48 +224,18 @@ int main (int argc, char **argv)
 
                 if (keydown == 1) {
                     //previous press was a keydown and the key has been release
-                    fprintf(stderr, "Key up %02x %02x\n", keydown0, keydown1);
+                    fprintf(stderr, "Key up %02x %02x %s\n", keydown0, keydown1, keymap[keydown0]);
 
                     // F1
                     if(keydown0 == 0x03){
                         fprintf(stderr, "launching retroarch");
                         system("sudo -u kodi /home/kodi/run-retroarch.sh");
                     }
-
-                    // up
-                    if(keydown0 == 0x0a){
-                        fprintf(stderr, "up");
-                        system("DISPLAY=:0 xdotool key Up");
-                    }
-
-                    if(keydown0 == 0x0b){
-                        fprintf(stderr, "down");
-                        system("DISPLAY=:0 xdotool key Down");
-                    }
-
-                    if(keydown0 == 0x08){
-                        fprintf(stderr, "left");
-                        system("DISPLAY=:0 xdotool key Left");
-                    }
-
-                    if(keydown0 == 0x09){
-                        fprintf(stderr, "right");
-                        system("DISPLAY=:0 xdotool key Right");
-                    }
-
-                    if(keydown0 == 0x0c){
-                        fprintf(stderr, "select");
-                        system("DISPLAY=:0 xdotool key Return");
-                    }
-
-                    if (keydown0 == 0x01) {
-                        fprintf(stderr, "plus");
-                        system("DISPLAY=:0 xdotool keyup XF86AudioRaiseVolume");
-                    }
-
-                    if (keydown0 == 0x02) {
-                        fprintf(stderr, "minus");
-                        system("DISPLAY=:0 xdotool keyup XF86AudioLowerVolume");
+                    else{
+                        char command[200] = "DISPLAY=:0 xdotool keyup ";
+                        strcat(command, keymap[keydown0]);
+                        fprintf(stderr, command);
+                        system(command);
                     }
 
                 }
@@ -257,14 +246,12 @@ int main (int argc, char **argv)
                 keydown0 = event->data[0];
                 keydown1 = event->data[1];
 
-                if (keydown0 == 0x01) {
-                    fprintf(stderr, "plus");
-                    system("DISPLAY=:0 xdotool keydown XF86AudioRaiseVolume");
-                }
-
-                if (keydown0 == 0x02) {
-                    fprintf(stderr, "minus");
-                    system("DISPLAY=:0 xdotool keydown XF86AudioLowerVolume");
+                if(keydown0 != 0x03){
+                    fprintf(stderr, "Key down %02x %02x %s\n ", keydown0, keydown1, keymap[keydown0]);
+                    char command[200] = "DISPLAY=:0 xdotool keydown ";
+                    strcat(command, keymap[keydown0]);
+                    fprintf(stderr, command);
+                    system(command);
                 }
             }
         }
