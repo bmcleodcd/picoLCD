@@ -74,7 +74,7 @@ int main (int argc, char **argv)
     }
     
     /* init hid device and usblcd_operations structure */
-    if ((mylcd = new_driver(PICOLCD20x4)) == NULL)
+    if ((mylcd = new_driver(PICOLCD20x2)) == NULL)
 	return 1;
 	
     /* set hid debug level */
@@ -186,17 +186,88 @@ int main (int argc, char **argv)
 	if (strncmp(s, "read", 4) == 0) {
 	    rc5decoder *rc5;
 	    rc5 = rc5_init();
-	    
+
+        int keydown = 0;
+        int keydown0=0;
+        int keydown1=0;
+
 	    while (1) 
 	    {
-		
+
 		if ((event = mylcd->read_events(mylcd)) == NULL)
 		    continue;
 		
 		if (event->type == 0) 
 		{
 		    fprintf(stderr, "Key: %02x %02x\n", event->data[0], event->data[1]);
-		}
+
+            if (event->data[0] == 0 && event->data[1] == 0) {
+
+                if (keydown == 1) {
+                    //previous press was a keydown and the key has been release
+                    fprintf(stderr, "Key up %02x %02x\n", keydown0, keydown1);
+
+                    // F1
+                    if(keydown0 == 0x03){
+                        fprintf(stderr, "launching retroarch");
+                        system("sudo -u kodi /home/kodi/run-retroarch.sh");
+                    }
+
+                    // up
+                    if(keydown0 == 0x0a){
+                        fprintf(stderr, "up");
+                        system("DISPLAY=:0 xdotool key Up");
+                    }
+
+                    if(keydown0 == 0x0b){
+                        fprintf(stderr, "down");
+                        system("DISPLAY=:0 xdotool key Down");
+                    }
+
+                    if(keydown0 == 0x08){
+                        fprintf(stderr, "left");
+                        system("DISPLAY=:0 xdotool key Left");
+                    }
+
+                    if(keydown0 == 0x09){
+                        fprintf(stderr, "right");
+                        system("DISPLAY=:0 xdotool key Right");
+                    }
+
+                    if(keydown0 == 0x0c){
+                        fprintf(stderr, "select");
+                        system("DISPLAY=:0 xdotool key Return");
+                    }
+
+                    if (keydown0 == 0x01) {
+                        fprintf(stderr, "plus");
+                        system("DISPLAY=:0 xdotool keyup XF86AudioRaiseVolume");
+                    }
+
+                    if (keydown0 == 0x02) {
+                        fprintf(stderr, "minus");
+                        system("DISPLAY=:0 xdotool keyup XF86AudioLowerVolume");
+                    }
+
+                }
+
+                keydown = 0;
+            } else {
+                keydown = 1;
+                keydown0 = event->data[0];
+                keydown1 = event->data[1];
+
+                if (keydown0 == 0x01) {
+                    fprintf(stderr, "plus");
+                    system("DISPLAY=:0 xdotool keydown XF86AudioRaiseVolume");
+                }
+
+                if (keydown0 == 0x02) {
+                    fprintf(stderr, "minus");
+                    system("DISPLAY=:0 xdotool keydown XF86AudioLowerVolume");
+                }
+            }
+        }
 		
 		if (event->type == 1)
 		{
