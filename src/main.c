@@ -22,10 +22,10 @@ static const char* keymap[16] = {
         "XF86AudioRaiseVolume", //0x00 Plus button left of lcd screen
         "XF86AudioLowerVolume", //0x02 Minus button left of lcd screen
         "0x03", //0x03 F1 button
-        "0x04", //0x04 F2 button
-        "0x05", //0x05 F3 button
+        "XF86AudioPlay", //0x04 F2 button
+        "XF86AudioStop", //0x05 F3 button
         "0x06", //0x06 F4 button
-        "0x07", //0x07 F5 button
+        "Escape", //0x07 F5 button
         "Left", //0x08 Left button right of lcd screen
         "Right", //0x08 Right button right of lcd screen
         "Up", //0x0a Up button right of lcd screen
@@ -233,10 +233,23 @@ int main (int argc, char **argv)
                     // F1
                     if(keydown0 == 0x03){
                         fprintf(stderr, "launching retroarch");
+                        if(x != NULL) {
+                            x->close_display_when_freed = 0;
+                            xdo_free(x);
+                        }
+
                         system("sudo -u kodi /home/kodi/run-retroarch.sh");
+
+                        usleep(5000); //give kodi service a time to restart x11
+
+
+                        x = xdo_new(":0");
+
                     }
                     else{
-                        xdo_send_keysequence_window_up(x, CURRENTWINDOW,keymap[keydown0],key_delay);
+                        if(x != NULL) {
+                            xdo_send_keysequence_window_up(x, CURRENTWINDOW, keymap[keydown0], key_delay);
+                        }
                     }
 
                 }
@@ -248,7 +261,9 @@ int main (int argc, char **argv)
                 keydown1 = event->data[1];
 
                 if(keydown0 != 0x03){
-                    xdo_send_keysequence_window_down(x, CURRENTWINDOW,keymap[keydown0],key_delay);
+                    if(x != NULL){
+                     xdo_send_keysequence_window_down(x, CURRENTWINDOW,keymap[keydown0],key_delay);
+                    }
                 }
             }
         }
@@ -271,7 +286,9 @@ int main (int argc, char **argv)
 		free(event);
 	    }
 
-        xdo_free(x);
+        if(x != NULL) {
+            xdo_free(x);
+        }
 	}	
 	
 	if (strncmp(s, "histo", 5) == 0) {
