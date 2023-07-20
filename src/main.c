@@ -216,6 +216,15 @@ int main (int argc, char **argv)
 
 	    while (1) 
 	    {
+        time_t t;   // not a primitive datatype
+        time(&t);
+        char buffer[20];
+        struct tm *lt;
+
+        lt = localtime( &t );
+        strftime(buffer,25,"%a %d %B %H:%M", lt);
+        mylcd->settext(mylcd, 0, 0,  buffer);
+        mylcd->settext(mylcd, 1, 0,  "brycebrycebrycebrycebryce");
 
 		if ((event = mylcd->read_events(mylcd)) == NULL)
 		    continue;
@@ -276,7 +285,12 @@ int main (int argc, char **argv)
 			fprintf(stderr, "%02x ", event->data[i]);
 		    printf("\n");
 #endif
-		    
+
+            int i;
+            for (i = 0; i < event->length; i++)
+                fprintf(stderr, "%02x ", event->data[i]);
+            printf("\n");
+            //mce remote is rc6...
 		    rc5_decode(rc5, event->data, event->length);
 		}
 		
