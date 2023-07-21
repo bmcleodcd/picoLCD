@@ -216,15 +216,35 @@ int main (int argc, char **argv)
 
 	    while (1) 
 	    {
+
+        char buffer1[20];
+        char buffer2[20];
+
+        //time stuff
         time_t t;   // not a primitive datatype
         time(&t);
-        char buffer[20];
+
         struct tm *lt;
 
         lt = localtime( &t );
-        strftime(buffer,25,"%a %d %B %H:%M", lt);
-        mylcd->settext(mylcd, 0, 0,  buffer);
-        mylcd->settext(mylcd, 1, 0,  "brycebrycebrycebrycebryce");
+        strftime(buffer1, 25, "%a %d %B %H:%M    ", lt);
+        //end time stuff
+
+        //temperature stuff
+
+        float systemp, millideg;
+        FILE *thermal;
+        int n;
+
+        thermal = fopen("/sys/class/thermal/thermal_zone2/temp","r");
+        n = fscanf(thermal,"%f",&millideg);
+        fclose(thermal);
+        systemp = millideg / 1000;
+        sprintf(buffer2,"Temp %.2f C        ", systemp);
+        //end temperature stuff
+
+        mylcd->settext(mylcd, 0, 0, buffer1);
+        mylcd->settext(mylcd, 1, 0, buffer2);
 
 		if ((event = mylcd->read_events(mylcd)) == NULL)
 		    continue;
