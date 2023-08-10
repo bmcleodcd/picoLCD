@@ -16,6 +16,7 @@
 
 //#define DEBUG
 #undef DEBUG
+#define LINE_MAX_BUFFER_SIZE 255
 
 static const char* keymap[16] = {
         "0x00", //0x00 ??
@@ -35,6 +36,24 @@ static const char* keymap[16] = {
         "0x0e", //0x0e ??
         "0x0f", //0x0f ??
 };
+
+int runExternalCommand(char *cmd, char lines[][LINE_MAX_BUFFER_SIZE]) {
+    FILE *fp;
+    char path[LINE_MAX_BUFFER_SIZE];
+
+    /* Open the command for reading. */
+    fp = popen(cmd, "r");
+    if (fp == NULL) {
+        return -1;
+    }
+
+    int cnt = 0;
+    while (fgets(path, sizeof(path), fp) != NULL) {
+        strcpy(lines[cnt++], path);
+    }
+    pclose(fp);
+    return cnt;
+}
 
 void usage (char *program)
 {
@@ -98,9 +117,9 @@ int main (int argc, char **argv)
 	return 1;
 	
     /* set hid debug level */
-    mylcd->hid->debug(5);
+    mylcd->hid->debug(0);
     /* set usblcd debug level */
-    mylcd->debug(5);
+    mylcd->debug(0);
     /* init the USB LCD */
     mylcd->init(mylcd);
     /* clear the LCD screen */
@@ -202,6 +221,8 @@ int main (int argc, char **argv)
 	if (strncmp(s, "clear", 5) == 0) {
 		mylcd->clear(mylcd);
 	}
+
+
 	
 	if (strncmp(s, "read", 4) == 0) {
 	    rc5decoder *rc5;
@@ -214,12 +235,15 @@ int main (int argc, char **argv)
         int keydown0=0;
         int keydown1=0;
 
-	    while (1) 
-	    {
+        time_t lastTempRefresh ;
+        time(&lastTempRefresh);
+        const useconds_t tempRefreshDelay = 5;
 
         char buffer1[20];
         char buffer2[20];
 
+	    while (1)
+	    {
         //time stuff
         time_t t;   // not a primitive datatype
         time(&t);
@@ -231,17 +255,26 @@ int main (int argc, char **argv)
         //end time stuff
 
         //temperature stuff
+        if(t-lastTempRefresh > tempRefreshDelay){
 
-        float systemp, millideg;
-        FILE *thermal;
-        int n;
+            float systemp, millideg;
+            FILE *thermal;
+            int n;
 
-        thermal = fopen("/sys/class/thermal/thermal_zone2/temp","r");
-        n = fscanf(thermal,"%f",&millideg);
-        fclose(thermal);
-        systemp = millideg / 1000;
-        sprintf(buffer2,"Temp %.2f C        ", systemp);
-        //end temperature stuff
+            thermal = fopen("/sys/class/thermal/thermal_zone2/temp","r");
+            n = fscanf(thermal,"%f",&millideg);
+            fclose(thermal);
+            systemp = millideg / 1000;
+
+
+            char output[100][LINE_MAX_BUFFER_SIZE];
+            int a = runExternalCommand("nvidia-smi | grep '[0-9][0-9]C' | awk '{print $3}' | sed 's/C//'", output);
+
+            sprintf(buffer2,"CPU %.2f GPU %c%c.00 C", systemp, output[0][0], output[0][1]);
+            //end temperature stuff
+
+            time(&lastTempRefresh);
+        }
 
         mylcd->settext(mylcd, 0, 0, buffer1);
         mylcd->settext(mylcd, 1, 0, buffer2);
@@ -381,3 +414,6 @@ int main (int argc, char **argv)
     mylcd->close(mylcd);
     return 0;
 }
+
+
+
