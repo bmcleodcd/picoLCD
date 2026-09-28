@@ -5,7 +5,21 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
 
 ## Behaviour
 
-- The date uses an abbreviated month so it always fits the 20-character row.
+- The date row scrolls left one character every 400 ms, with a three-space gap
+  between repetitions. It shows the full weekday/month, date, year and time.
+- When Kodi has an active audio/video player, its title replaces the date (falling
+  back to its label, then file/path). Paused content retains its title. RetroArch's
+  loaded game takes precedence, including while paused/in menus. With no content,
+  or when status is unavailable, the row returns to the date. Long titles scroll;
+  short titles stay still. A content change resets scrolling to the beginning.
+- A background thread queries local Kodi JSON-RPC (TCP 9090) and RetroArch status
+  (UDP 55355) approximately once per second with bounded 500 ms network waits.
+  The USB/button loop never waits for these queries. json-c handles streamed JSON
+  and notifications. Non-ASCII characters become `?` on this character LCD.
+- RetroArch needs `network_cmd_enable = "true"` and `network_cmd_port = "55355"`
+  in its config, effective on its next start. This has been enabled on minibox with
+  a backup of the previous config. RetroArch's command interface listens on all
+  network interfaces; the panel itself sends only read-only queries to localhost.
 - CPU temperature shows one decimal; GPU temperature adds a cosmetic `.0` to its integer NVML reading.
 - Rows are space-padded and sent only when changed. CPU/GPU samples run immediately,
   then every five monotonic seconds; clock comparison runs once per second.
@@ -30,11 +44,13 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
 ## Build and verification
 
 Linux dependencies: C compiler, libusb-0.1 development package, libxdo/X11 development
-packages, pkg-config and libdbus-1 development package. NVML is an optional runtime
+packages, pkg-config, libdbus-1 and json-c >= 0.15 development packages. NVML is an optional runtime
 dependency. Run `sh build-check.sh` to build a private binary/library and execute
 AddressSanitizer/UndefinedBehaviorSanitizer checks, an isolated session-bus launcher
 test, actual sensor queries, and a six-second loop test with simulated USB timeouts
-and unavailable X. The live panel is not accessed by these tests.
+and unavailable X, including date/Kodi/RetroArch/date transitions. Media tests cover
+title/path fallback, paused/unloaded content, fragmented/concatenated JSON, query
+timeouts, and worker shutdown. The live panel is not accessed by these tests.
 
 The legacy SDK emits warnings in unrelated font/widget/parser code. The custom
 panel module builds without warnings. This does not claim to repair all SDK code.

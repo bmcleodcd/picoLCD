@@ -12,12 +12,15 @@
 #include <dbus/dbus.h>
 #include <xdo.h>
 #include "panel.h"
+#include "media.h"
 #include "picolcd-common.h"
 #include "rc5.h"
 
 #define LCD_WIDTH 20
 #define KEY_COUNT 16
 #define F1_KEY 3
+#define MARQUEE_INTERVAL 0.4
+#define MARQUEE_GAP 3
 
 static const char *const keymap[KEY_COUNT] = {
     NULL, "XF86AudioRaiseVolume", "XF86AudioLowerVolume", NULL,
@@ -57,6 +60,20 @@ static void update_row(usblcd_operations *lcd, int index,
         lcd->settext(lcd, index, 0, row);
         memcpy(previous, row, sizeof(row));
     }
+}
+
+static void marquee_row(char row[LCD_WIDTH + 1], const char *text, size_t offset)
+{
+    size_t length = strlen(text), i;
+    if (length <= LCD_WIDTH) {
+        make_row(row, text);
+        return;
+    }
+    for (i = 0; i < LCD_WIDTH; ++i) {
+        size_t position = (offset + i) % (length + MARQUEE_GAP);
+        row[i] = position < length ? text[position] : ' ';
+    }
+    row[LCD_WIDTH] = '\0';
 }
 
 static int read_cpu_temperature(char *path, size_t capacity, float *degrees)
@@ -214,6 +231,13 @@ int panel_run(usblcd_operations *lcd)
     char cpu_path[256] = "";
     char previous[2][LCD_WIDTH + 1] = {{0}};
     double next_temperature = 0, next_clock = 0, next_x = 0, next_bus = 0;
+    double next_scroll = 0;
+    size_t scroll_offset = 0;
+    char date_text[64] = "Time unavailable";
+    char last_media[MEDIA_TITLE_SIZE] = "";
+    enum media_source last_source = MEDIA_NONE;
+    struct media_monitor *media = media_start();
+    if (!media) fprintf(stderr, "Media monitor unavailable; showing date\n");
     xdo_t *x = NULL;
     unsigned int physical = 0, sent = 0;
     DBusConnection *bus = NULL;
@@ -234,11 +258,26 @@ int panel_run(usblcd_operations *lcd)
         if (now >= next_clock) {
             time_t wall = time(NULL);
             struct tm local;
-            char text[64] = "Time unavailable";
-            if (localtime_r(&wall, &local))
-                strftime(text, sizeof(text), "%a %d %b %H:%M", &local);
-            update_row(lcd, 0, previous[0], text);
+            if (!localtime_r(&wall, &local) ||
+                !strftime(date_text, sizeof(date_text), "%A %d %B %Y %H:%M", &local))
+                strcpy(date_text, "Time unavailable");
             next_clock = now + 1;
+        }
+        if (now >= next_scroll) {
+            char row[LCD_WIDTH + 1];
+            char title[MEDIA_TITLE_SIZE];
+            enum media_source source = media_snapshot(media, title, sizeof(title));
+            if (source != last_source || strcmp(title, last_media) != 0) {
+                scroll_offset = 0;
+                last_source = source;
+                snprintf(last_media, sizeof(last_media), "%s", title);
+            }
+            const char *text = source == MEDIA_NONE ? date_text : title;
+            size_t cycle = strlen(text) + MARQUEE_GAP;
+            marquee_row(row, text, scroll_offset);
+            update_row(lcd, 0, previous[0], row);
+            scroll_offset = (scroll_offset + 1) % cycle;
+            next_scroll = now + MARQUEE_INTERVAL;
         }
         if (now >= next_temperature) {
             float cpu;
@@ -313,6 +352,7 @@ int panel_run(usblcd_operations *lcd)
     if (pending) { dbus_pending_call_cancel(pending); dbus_pending_call_unref(pending); }
     if (bus) { dbus_connection_close(bus); dbus_connection_unref(bus); }
     gpu_close(&gpu);
+    media_stop(media);
     if (rc5) rc5_close(rc5);
     return result;
 }

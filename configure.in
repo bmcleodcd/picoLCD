@@ -23,6 +23,7 @@ AC_PROG_CC
 
 PKG_CHECK_MODULES([USB], [libusb])
 PKG_CHECK_MODULES([DBUS], [dbus-1])
+PKG_CHECK_MODULES([JSON_C], [json-c >= 0.15])
 
 # Checks the OS
 case ${host_os} in

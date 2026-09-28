@@ -1,8 +1,8 @@
 AM_MAKEFLAGS = 
 ACLOCAL_AMFLAGS = -I m4
 
-AM_CPPFLAGS = $(DBUS_CFLAGS)
-AM_CFLAGS =  -fPIC -Wall $(USB_CFLAGS)
+AM_CPPFLAGS = $(DBUS_CFLAGS) $(JSON_C_CFLAGS)
+AM_CFLAGS =  -fPIC -Wall $(USB_CFLAGS) -pthread
 AM_LDFLAGS = 
 
 if OS_LINUX
@@ -18,8 +18,8 @@ endif
 
 bin_PROGRAMS = picolcd picolcdboot
 picolcd_DEPENDENCIES = ../lib/libpicolcd.la
-picolcd_LDADD = ../lib/libpicolcd.la $(AM_LDFLAGS) -lxdo -lX11 -ldl $(DBUS_LIBS)
-picolcd_SOURCES = main.c picolcd-util.c panel.c panel.h
+picolcd_LDADD = ../lib/libpicolcd.la $(AM_LDFLAGS) -lxdo -lX11 -ldl $(DBUS_LIBS) $(JSON_C_LIBS) -pthread
+picolcd_SOURCES = main.c picolcd-util.c panel.c panel.h media.c media.h
 
 picolcdboot_DEPENDENCIES = ../lib/libpicolcd.la
 picolcdboot_LDADD = ../lib/libpicolcd.la $(AM_LDFLAGS)
