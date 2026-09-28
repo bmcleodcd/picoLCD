@@ -40,5 +40,7 @@ void picolcd_irdata(usblcd_operations *self);
 void picolcd_powerstate(usblcd_operations *self);
 void picolcd_send(usblcd_operations *self, char *data, int size);
 usblcd_event * picolcd_read_events(usblcd_operations *self);
+/* NULL means timeout/ignored packet (errno 0 or ETIMEDOUT), or an errno error. */
+usblcd_event *picolcd_read_events_timeout(usblcd_operations *self, int timeout_ms);
 void picolcd_close(usblcd_operations *self);
 void picolcd_unimplemented(void);

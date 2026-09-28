@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include "driver.h"
 #include "picolcd.h"
@@ -522,81 +523,45 @@ void picolcd_powerstate(usblcd_operations *self)
 
 }
 
-usblcd_event * picolcd_read_events(usblcd_operations *self)
+usblcd_event *picolcd_read_events_timeout(usblcd_operations *self, int timeout_ms)
 {
-    int ret = -1;
-    unsigned char read_packet[self->max_data_len];
+    unsigned char packet[256];
     usblcd_event *event;
-
-    //hid_set_idle(self->hid->hiddev->handle, 0, 0);
-    
-    if ((event = (usblcd_event *) malloc(sizeof(usblcd_event))) == NULL) return NULL;
-    if ((event->data = (unsigned char *) malloc(sizeof(unsigned char) * self->max_data_len)) == NULL) 
-		    return NULL;
-     
-    ret = usb_interrupt_read(self->hid->hiddev->handle, USB_ENDPOINT_IN + 1, (char *)read_packet, self->max_data_len, 10000);
-    
-    if (ret > 0) {
-        switch (read_packet[0]) {
-
-	    case IN_REPORT_KEY_STATE:
-	    {	
-		event->type = 0;
-		event->length = 2;
-		memcpy(event->data, &read_packet[1], event->length);
-#ifdef DEBUG
-		print_buffer(event->data, event->length);
-#endif	
-		return event;
-		
-	    } break;
-
-    	    case IN_REPORT_IR_DATA:
-	    {
-
-		event->type = 1;
-		event->length = read_packet[1];
-		/* IR data packet also has a IR data length field */
-		memcpy(event->data, &read_packet[2], event->length);
-#ifdef DEBUG
-		print_buffer(event->data, event->length);
-#endif	
-		return event;
-
-	    } break;
-
-	    case IN_REPORT_INT_EE_DATA:
-	    {	
-#ifdef DEBUG
-		fprintf(stderr,"IN_REPORT_INT_EE_DATA: ");
-		print_buffer(read_packet, self->max_data_len);
-#endif
-	    } break;
-		
-	    case RESULT_PARAMETER_MISSING:
-	    case RESULT_DATA_MISSING:
-	    case RESULT_BLOCK_READ_ONLY:
-	    case RESULT_BLOCK_TOO_BIG:
-	    case RESULT_SECTION_OVERFLOW:
-	    case HID_REPORT_GET_VERSION:
-	    case HID_REPORT_ERASE_MEMORY:
-	    case HID_REPORT_READ_MEMORY:
-	    case HID_REPORT_WRITE_MEMORY:
-	    case IN_REPORT_EXT_EE_DATA:
-	    case OUT_REPORT_EXT_EE_READ:
-	    case OUT_REPORT_EXT_EE_WRITE:
-	    case OUT_REPORT_INT_EE_READ:
-	    case OUT_REPORT_INT_EE_WRITE:
-	    case HID_REPORT_EXIT_FLASHER:
-	    case HID_REPORT_EXIT_KEYBOARD:
-	    default:
-		break;
-	}
+    int ret, offset, length, type;
+    errno = 0;
+    if (!self || self->max_data_len > sizeof(packet) || self->max_data_len < 3 || timeout_ms <= 0) {
+        errno = EINVAL;
+        return NULL;
     }
-    
-    return NULL;
+    ret = usb_interrupt_read(self->hid->hiddev->handle, USB_ENDPOINT_IN + 1,
+                             (char *)packet, self->max_data_len, timeout_ms);
+    if (ret <= 0) {
+        errno = ret < 0 ? -ret : 0;
+        return NULL;
+    }
+    if (packet[0] == IN_REPORT_KEY_STATE) {
+        if (ret < 3) return NULL;
+        type = 0; offset = 1; length = 2;
+    } else if (packet[0] == IN_REPORT_IR_DATA) {
+        if (ret < 2 || packet[1] == 0 || packet[1] > ret - 2) return NULL;
+        type = 1; offset = 2; length = packet[1];
+    } else {
+        return NULL;
+    }
+    event = malloc(sizeof(*event));
+    if (!event) return NULL;
+    event->data = malloc(length);
+    if (!event->data) { free(event); return NULL; }
+    event->type = type;
+    event->length = length;
+    memcpy(event->data, packet + offset, length);
+    return event;
 }
 
+usblcd_event *picolcd_read_events(usblcd_operations *self)
+{
+    return picolcd_read_events_timeout(self, 10000);
+}
 
 void picolcd_close(usblcd_operations *self)
 {

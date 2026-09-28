@@ -29,12 +29,20 @@ int clock_gettime(int method, struct timespec *tp)
 //#define DEBUG
 #undef DEBUG
 
+static void rc5_reset(rc5decoder *rc5)
+{
+    rc5->state = RC5_STATE_BEGIN;
+    rc5->nbits = 0;
+    memset(rc5->bits, 0, sizeof(rc5->bits));
+    clock_gettime(CLOCK_METHOD, &rc5->command_delay);
+}
+
 static struct timespec rc5_get_delay(struct timespec start, struct timespec end)
 {
         struct timespec elapsed;
         
         if ((end.tv_nsec - start.tv_nsec) < 0) { 
-                elapsed.tv_sec = end.tv_sec - start.tv_sec + 1; 
+                elapsed.tv_sec = end.tv_sec - start.tv_sec - 1;
                 elapsed.tv_nsec = PRECISION + end.tv_nsec - start.tv_nsec; 
         } else { 
                 elapsed.tv_sec = end.tv_sec - start.tv_sec; 
@@ -58,6 +66,7 @@ static void rc5_save_delay(rc5decoder *rc5, struct timespec delay)
 
 static void rc5_addbit(rc5decoder *rc5, char bit)
 {
+	if (rc5->nbits >= RC5_COMMAND_LEN) return;
 	rc5->bits[rc5->nbits] = bit;
 	rc5->nbits++;
 	
@@ -193,11 +202,10 @@ int rc5_decode(rc5decoder *rc5, unsigned char *data, int len)
     clock_gettime(CLOCK_METHOD, &delay);
     elapsed = rc5_get_delay(rc5->command_delay, delay);
     
-    if (elapsed.tv_nsec / 1000 / 1000 > RC5_BUTTON_DELAY)
+    if (elapsed.tv_sec > 0 || elapsed.tv_nsec / 1000000 > RC5_BUTTON_DELAY)
     {
 		printf("IR_RC5: New command\n");
-		rc5_close(rc5);
-		rc5 = rc5_init();
+		rc5_reset(rc5);
     }
     
     rc5_save_delay(rc5, delay);
@@ -205,8 +213,7 @@ int rc5_decode(rc5decoder *rc5, unsigned char *data, int len)
     if ((len % 2)!=0)
     {
 	printf("IR_RC5: Bad command\n");
-	rc5_close(rc5);
-	rc5 = rc5_init();
+	rc5_reset(rc5);
 	return 0;
     }
 
@@ -218,8 +225,7 @@ int rc5_decode(rc5decoder *rc5, unsigned char *data, int len)
 	if (! rc5_checkcode(rc5, buff_short[i]))
 	{
 		printf("IR_RC5: Bad pulse (%d=%d %x)\n",i,buff_short[i],buff_short[i]&0xFFFF);
-		rc5_close(rc5);
-		rc5 = rc5_init();
+		rc5_reset(rc5);
 	}
 	else
 	{
@@ -231,8 +237,7 @@ int rc5_decode(rc5decoder *rc5, unsigned char *data, int len)
 			for (b = 0; b < 14; b++)
 				printf("%d",rc5->bits[b]);
 				printf("]\n");
-				rc5_close(rc5);
-				rc5 = rc5_init();
+				rc5_reset(rc5);
 			}
 		}
 	}

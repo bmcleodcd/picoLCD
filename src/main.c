@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #include <time.h>
-#include <xdo.h>
+#include "panel.h"
 
 #include "picolcd.h"
 #include "rc5.h"
@@ -16,45 +16,6 @@
 
 //#define DEBUG
 #undef DEBUG
-#define LINE_MAX_BUFFER_SIZE 255
-
-static const char* keymap[16] = {
-        "0x00", //0x00 ??
-        "XF86AudioRaiseVolume", //0x00 Plus button left of lcd screen
-        "XF86AudioLowerVolume", //0x02 Minus button left of lcd screen
-        "0x03", //0x03 F1 button
-        "XF86AudioPlay", //0x04 F2 button
-        "XF86AudioStop", //0x05 F3 button
-        "0x06", //0x06 F4 button
-        "Escape", //0x07 F5 button
-        "Left", //0x08 Left button right of lcd screen
-        "Right", //0x08 Right button right of lcd screen
-        "Up", //0x0a Up button right of lcd screen
-        "Down", //0x0b Down button right of lcd screen
-        "Return", //0x0c OK button right of lcd screen
-        "0x0d", //0x0d ??
-        "0x0e", //0x0e ??
-        "0x0f", //0x0f ??
-};
-
-int runExternalCommand(char *cmd, char lines[][LINE_MAX_BUFFER_SIZE]) {
-    FILE *fp;
-    char path[LINE_MAX_BUFFER_SIZE];
-
-    /* Open the command for reading. */
-    fp = popen(cmd, "r");
-    if (fp == NULL) {
-        return -1;
-    }
-
-    int cnt = 0;
-    while (fgets(path, sizeof(path), fp) != NULL) {
-        strcpy(lines[cnt++], path);
-    }
-    pclose(fp);
-    return cnt;
-}
-
 void usage (char *program)
 {
     printf ("Usage: %s [commands]\n", program);
@@ -100,7 +61,7 @@ int main (int argc, char **argv)
     /* for connecting and communication with the device */
     usblcd_operations *mylcd;
     /* for keypad and infrared events */
-    usblcd_event *event;
+
     
     char *s;
     FILE *file;
@@ -225,140 +186,12 @@ int main (int argc, char **argv)
 
 	
 	if (strncmp(s, "read", 4) == 0) {
-	    rc5decoder *rc5;
-	    rc5 = rc5_init();
+	    int result = panel_run(mylcd);
+        mylcd->close(mylcd);
+        return result;
+    }
 
-        xdo_t * x = xdo_new(":0");
-        useconds_t key_delay = 12000;
-
-        int keydown = 0;
-        int keydown0=0;
-        int keydown1=0;
-
-        time_t lastTempRefresh ;
-        time(&lastTempRefresh);
-        const useconds_t tempRefreshDelay = 5;
-
-        char buffer1[20];
-        char buffer2[20];
-
-	    while (1)
-	    {
-        //time stuff
-        time_t t;   // not a primitive datatype
-        time(&t);
-
-        struct tm *lt;
-
-        lt = localtime( &t );
-        strftime(buffer1, 25, "%a %d %B %H:%M    ", lt);
-        //end time stuff
-
-        //temperature stuff
-        if(t-lastTempRefresh > tempRefreshDelay){
-
-            float systemp, millideg;
-            FILE *thermal;
-            int n;
-
-            thermal = fopen("/sys/class/thermal/thermal_zone2/temp","r");
-            n = fscanf(thermal,"%f",&millideg);
-            fclose(thermal);
-            systemp = millideg / 1000;
-
-
-            char output[100][LINE_MAX_BUFFER_SIZE];
-            int a = runExternalCommand("nvidia-smi | grep '[0-9][0-9]C' | awk '{print $3}' | sed 's/C//'", output);
-
-            sprintf(buffer2,"CPU %.2f GPU %c%c.00 C", systemp, output[0][0], output[0][1]);
-            //end temperature stuff
-
-            time(&lastTempRefresh);
-        }
-
-        mylcd->settext(mylcd, 0, 0, buffer1);
-        mylcd->settext(mylcd, 1, 0, buffer2);
-
-		if ((event = mylcd->read_events(mylcd)) == NULL)
-		    continue;
-		
-		if (event->type == 0) 
-		{
-		    fprintf(stderr, "Key: %02x %02x\n", event->data[0], event->data[1]);
-
-            if (event->data[0] == 0 && event->data[1] == 0) {
-
-                if (keydown == 1) {
-                    //previous press was a keydown and the key has been release
-                    fprintf(stderr, "Key up %02x %02x %s\n", keydown0, keydown1, keymap[keydown0]);
-
-                    // F1
-                    if(keydown0 == 0x03){
-                        fprintf(stderr, "launching retroarch");
-                        if(x != NULL) {
-                            x->close_display_when_freed = 0;
-                            xdo_free(x);
-                        }
-
-                        system("sudo -u kodi /home/kodi/run-retroarch.sh");
-
-                        usleep(5000); //give kodi service a time to restart x11
-
-
-                        x = xdo_new(":0");
-
-                    }
-                    else{
-                        if(x != NULL) {
-                            xdo_send_keysequence_window_up(x, CURRENTWINDOW, keymap[keydown0], key_delay);
-                        }
-                    }
-
-                }
-
-                keydown = 0;
-            } else {
-                keydown = 1;
-                keydown0 = event->data[0];
-                keydown1 = event->data[1];
-
-                if(keydown0 != 0x03){
-                    if(x != NULL){
-                     xdo_send_keysequence_window_down(x, CURRENTWINDOW,keymap[keydown0],key_delay);
-                    }
-                }
-            }
-        }
-		
-		if (event->type == 1)
-		{
-#ifdef DEBUG		    
-		    int i;
-		    for (i = 0; i < event->length; i++)
-			fprintf(stderr, "%02x ", event->data[i]);
-		    printf("\n");
-#endif
-
-            int i;
-            for (i = 0; i < event->length; i++)
-                fprintf(stderr, "%02x ", event->data[i]);
-            printf("\n");
-            //mce remote is rc6...
-		    rc5_decode(rc5, event->data, event->length);
-		}
-		
-		usleep(10);
-		
-		free(event->data);
-		free(event);
-	    }
-
-        if(x != NULL) {
-            xdo_free(x);
-        }
-	}	
-	
-	if (strncmp(s, "histo", 5) == 0) {
+    if (strncmp(s, "histo", 5) == 0) {
 	    histo_opts options;
 	    int values[64],i;
 	    srand((unsigned)time(0));
