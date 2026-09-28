@@ -56,6 +56,13 @@ static void update_row(usblcd_operations *lcd, int index,
 {
     char row[LCD_WIDTH + 1];
     make_row(row, text);
+    if (index == 1) {
+        size_t length = strlen(row);
+        while (length && row[length - 1] == ' ') --length;
+        size_t padding = (LCD_WIDTH - length) / 2;
+        memmove(row + padding, row, length);
+        memset(row, ' ', padding);
+    }
     if (strcmp(previous, row) != 0) {
         lcd->settext(lcd, index, 0, row);
         memcpy(previous, row, sizeof(row));
@@ -234,6 +241,7 @@ int panel_run(usblcd_operations *lcd)
     double next_scroll = 0;
     size_t scroll_offset = 0;
     char date_text[64] = "Time unavailable";
+    char temperature_text[64] = "CPU -- GPU -- C";
     char last_media[MEDIA_TITLE_SIZE] = "";
     enum media_source last_source = MEDIA_NONE;
     struct media_monitor *media = media_start();
@@ -282,15 +290,19 @@ int panel_run(usblcd_operations *lcd)
         if (now >= next_temperature) {
             float cpu;
             unsigned int temperature;
-            char cpu_text[12] = "--", gpu_text[12] = "--", text[64];
+            char cpu_text[12] = "--", gpu_text[12] = "--";
             if (read_cpu_temperature(cpu_path, sizeof(cpu_path), &cpu) == 0)
                 snprintf(cpu_text, sizeof(cpu_text), "%.1f", cpu);
             if (gpu_temperature(&gpu, &temperature) == 0)
                 snprintf(gpu_text, sizeof(gpu_text), "%u.0", temperature);
-            snprintf(text, sizeof(text), "CPU %s GPU %s C", cpu_text, gpu_text);
-            update_row(lcd, 1, previous[1], text);
+            snprintf(temperature_text, sizeof(temperature_text), "CPU %s GPU %s C", cpu_text, gpu_text);
             next_temperature = now + 5;
         }
+        struct media_playback playback;
+        char status_row[LCD_WIDTH + 1];
+        media_get_playback(media, &playback);
+        media_status_row(&playback, status_row);
+        update_row(lcd, 1, previous[1], status_row[0] ? status_row : temperature_text);
         if (!x && now >= next_x) {
             x = xdo_new(":0");
             next_x = now + 2;

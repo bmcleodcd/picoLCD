@@ -12,10 +12,27 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
   loaded game takes precedence, including while paused/in menus. With no content,
   or when status is unavailable, the row returns to the date. Long titles scroll;
   short titles stay still. A content change resets scrolling to the beginning.
-- A background thread queries local Kodi JSON-RPC (TCP 9090) and RetroArch status
-  (UDP 55355) approximately once per second with bounded 500 ms network waits.
-  The USB/button loop never waits for these queries. json-c handles streamed JSON
-  and notifications. Non-ASCII characters become `?` on this character LCD.
+- Kodi episode titles show `Show S02E04 - Episode`; music shows `Artist - Track`.
+  Movies show `Title (Year)` when Kodi supplies a positive year; missing/zero years
+  are omitted.
+  Missing metadata still falls back to title, label, or path.
+- During Kodi playback, the bottom row shows elapsed/total time (`20:16 / 26:41`,
+  adding hours when needed), `Paused 20:16`, or `Live 20:16`. Unknown duration shows
+  elapsed time only. Idle/RetroArch restores temperatures. CPU/GPU sampling continues
+  while the temperature row is hidden.
+- All bottom-row messages are centred in the 20-character display. When the spare
+  space is odd, the extra space goes on the right.
+- Volume/mute changes temporarily replace the bottom row with `Volume 65%` or
+  `Muted` for three seconds, then restore playback status/temperatures. The initial
+  volume read does not cause a popup. This reports Kodi's volume, not an external AVR.
+- A background thread keeps a dedicated Kodi TCP 9090 notification connection for
+  playback/seek/volume events. Separate read-only queries refresh metadata and time
+  on playback events, with a ten-second fallback (two seconds while disconnected).
+  Time advances locally from a monotonic sample and freezes when paused. Notification
+  parsing preserves fragmented/concatenated messages and reconnects after disconnects.
+  RetroArch GET_STATUS is still checked approximately once per second over UDP 55355.
+  Network waits are bounded to 500 ms per operation, outside the USB/button loop.
+  Non-ASCII characters become `?` on this character LCD.
 - RetroArch needs `network_cmd_enable = "true"` and `network_cmd_port = "55355"`
   in its config, effective on its next start. This has been enabled on minibox with
   a backup of the previous config. RetroArch's command interface listens on all
@@ -49,8 +66,11 @@ dependency. Run `sh build-check.sh` to build a private binary/library and execut
 AddressSanitizer/UndefinedBehaviorSanitizer checks, an isolated session-bus launcher
 test, actual sensor queries, and a six-second loop test with simulated USB timeouts
 and unavailable X, including date/Kodi/RetroArch/date transitions. Media tests cover
-title/path fallback, paused/unloaded content, fragmented/concatenated JSON, query
-timeouts, and worker shutdown. The live panel is not accessed by these tests.
+title/path/episode/music formatting, paused/unloaded content, time extrapolation,
+volume overlay expiry, fragmented/concatenated JSON and notifications, query
+timeouts, disconnects, and worker shutdown. Loop tests exercise bottom-row progress,
+volume, pause and restoration as well as top-row transitions. The live panel is not
+accessed by these tests.
 
 The legacy SDK emits warnings in unrelated font/widget/parser code. The custom
 panel module builds without warnings. This does not claim to repair all SDK code.
