@@ -96,3 +96,31 @@ Manual rollback (substitute the backup directory printed by the installer):
 Physical button operation, LCD appearance, and the actual Kodi/RetroArch transition
 still need checking after installation. The automated launcher test uses a mock
 systemd endpoint on a separate bus and does not launch or stop media applications.
+
+## Persistent cat power-on splash
+
+`cat-splash.txt` contains five frames: centre (2 seconds), left (1 second),
+a centred blink (1 second), right (1 second), and centre (1 second). All frames
+keep the backlight enabled and use the firmware's sequential playback. The
+animation is stored in EEPROM and runs at power-on until the panel takes over.
+
+    sudo sh /home/kodi/picolcd-review-build/install-cat-splash.sh
+
+This one-time script stops panel.service, saves all 256 internal EEPROM bytes to a
+unique `/var/backups/picolcd-splash-XXXXXXXX/eeprom.bin`, writes and verifies the
+splash area, and restarts the panel if it was running. It uses the staged checked
+writer, not an older installed binary, and does not install another panel version.
+Disconnect/reconnect USB power to see the power-on splash; restarting Linux alone
+may leave USB power on. Physical appearance and persistence require that check.
+
+The old unsafe splash parser/writer was replaced: bounded text/slot parsing, exact
+235-byte serialization (five 47-byte records), variable final USB chunk size,
+checked acknowledgements, separate EEPROM read-back and automatic restoration on
+write failure. Bytes outside the splash area are preserved. An identical splash
+is not rewritten. The firmware-programming interface is not used. Sanitizer tests
+simulate EEPROM operations including bad acknowledgements and rollback.
+
+To restore an original backup, stop panel.service, run the staged binary's
+`eeprom-restore /var/backups/picolcd-splash-XXXXXXXX/eeprom.bin`, then start the
+service again. Run those operations with sudo. Keep the backup until the new
+power-on image has been checked.

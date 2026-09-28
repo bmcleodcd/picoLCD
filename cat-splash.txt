@@ -1,0 +1,28 @@
+# Five-frame cat: centre, left, blink, right, centre.
+# Sequential firmware playback; bit 7 keeps the backlight on.
+:splash
+00 2
+00 000
+10000000
+       /\_/\
+      ( o.o )
+00 1
+00 000
+10000000
+      /\_/\
+     ( o.o )
+00 1
+00 000
+10000000
+       /\_/\
+      ( -.- )
+00 1
+00 000
+10000000
+        /\_/\
+       ( o.o )
+00 1
+00 000
+10000000
+       /\_/\
+      ( o.o )

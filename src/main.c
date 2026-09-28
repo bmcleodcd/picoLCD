@@ -10,6 +10,7 @@
 #include "panel.h"
 
 #include "picolcd.h"
+#include "picolcd-common.h"
 #include "rc5.h"
 #include "widgets.h"
 #include "picolcd-util.h"
@@ -36,6 +37,8 @@ void usage (char *program)
     printf ("\tprints text on LCD screen starting with row and column\n");
     printf (" splash [filename]\n");
     printf ("\tsets the splash screens content from filename.\n");
+    printf (" eeprom-backup [new filename] | eeprom-restore [filename]\n");
+    printf ("\tbackup/restore the 256-byte internal EEPROM (20x2 only).\n");
     printf (" setfont [filename]\n");
     printf ("\toverwrite the first 10 characters from LCD CGRAM\n");
     printf ("\twith the caracters from filename.\n");
@@ -82,6 +85,38 @@ int main (int argc, char **argv)
     /* set usblcd debug level */
     mylcd->debug(0);
     /* init the USB LCD */
+    /* EEPROM commands below need no firmware-version or display requests. */
+    if (strcmp(argv[1], "eeprom-backup") == 0 || strcmp(argv[1], "eeprom-restore") == 0 ||
+        strcmp(argv[1], "splash") == 0) {
+        unsigned char data[256];
+        int result = -1;
+        if (argc != 3) fprintf(stderr, "This command needs exactly one filename\n");
+        else if (strcmp(argv[1], "splash") == 0)
+            result = picolcd_setsplash_checked(mylcd, argv[2]);
+        else if (strcmp(argv[1], "eeprom-backup") == 0) {
+            if (picolcd_eeprom_read(mylcd, data) == 0) {
+                file = fopen(argv[2], "wbx");
+                if (file) {
+                    int ok = fwrite(data, 1, sizeof(data), file) == sizeof(data) &&
+                             fflush(file) == 0 && fsync(fileno(file)) == 0;
+                    if (fclose(file) != 0) ok = 0;
+                    if (ok) result = 0;
+                }
+            }
+        } else {
+            file = fopen(argv[2], "rb");
+            if (file) {
+                int ok = fread(data, 1, sizeof(data), file) == sizeof(data) &&
+                         fgetc(file) == EOF && !ferror(file);
+                fclose(file);
+                if (ok) result = picolcd_eeprom_restore(mylcd, data);
+            }
+        }
+        if (result < 0) fprintf(stderr, "EEPROM operation failed\n");
+        mylcd->close(mylcd);
+        return result < 0 ? 1 : 0;
+    }
+
     mylcd->init(mylcd);
     /* clear the LCD screen */
     //mylcd->clear(mylcd);
@@ -162,12 +197,9 @@ int main (int argc, char **argv)
 	}
 	
 	if (strncmp(s, "splash", 6) == 0) {
-	    if ((file = fopen(argv[arg+1], "r")) != NULL) {
-		mylcd->setsplash(mylcd, argv[arg+1]);
-		arg++;
-	    } 
-	    else  
-		printf("File %s not readable\n",argv[arg+1]);
+            fprintf(stderr, "Run splash as a separate command with one filename\n");
+            mylcd->close(mylcd);
+            return 1;
 	}
 	
 	if (strncmp(s, "flash", 5) == 0) {

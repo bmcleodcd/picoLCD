@@ -26,6 +26,7 @@ libpicolcd_la_SOURCES = \
 	util.c \
 	picolcd.c \
 	picolcd-common.c \
+	splash.c \
 	picolcd-20x2.c \
 	picolcd-20x4.c \
 	picolcd-256x64.c \
