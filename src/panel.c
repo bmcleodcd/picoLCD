@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <time.h>
 #include <signal.h>
 #include <unistd.h>
@@ -117,6 +118,65 @@ static int read_cpu_temperature(char *path, size_t capacity, float *degrees)
     }
     *degrees = millidegrees / 1000.0f;
     return 0;
+}
+
+struct cpu_usage_reader {
+    uint64_t counters[8];
+    int initialized;
+};
+
+/* Aggregate CPU time: guest times are already included in user/nice.
+ * Treat idle and I/O wait as idle, matching the usual CPU utilization view. */
+static int cpu_usage_sample(struct cpu_usage_reader *reader, FILE *file,
+                            unsigned int *percent)
+{
+    char line[512];
+    uint64_t counters[8] = {0}, total = 0, idle = 0;
+    int fields, i, valid = reader->initialized;
+    if (!fgets(line, sizeof(line), file) || strncmp(line, "cpu ", 4) != 0)
+        goto failed;
+    fields = sscanf(line + 4,
+                    "%" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64
+                    " %" SCNu64 " %" SCNu64 " %" SCNu64 " %" SCNu64,
+                    &counters[0], &counters[1], &counters[2], &counters[3],
+                    &counters[4], &counters[5], &counters[6], &counters[7]);
+    if (fields < 4) goto failed;
+    for (i = 0; i < 8; ++i) {
+        if (counters[i] < reader->counters[i]) valid = 0;
+        uint64_t delta = counters[i] - reader->counters[i];
+        if (UINT64_MAX - total < delta) valid = 0;
+        total += delta;
+        if (i == 3 || i == 4) idle += delta;
+    }
+    memcpy(reader->counters, counters, sizeof(counters));
+    reader->initialized = 1;
+    if (!valid || !total || idle > total) return -1;
+    *percent = (unsigned int)(100.0 * (double)(total - idle) / (double)total + 0.5);
+    return 0;
+failed:
+    reader->initialized = 0;
+    return -1;
+}
+
+static int read_cpu_usage(struct cpu_usage_reader *reader, unsigned int *percent)
+{
+    FILE *file = fopen("/proc/stat", "r");
+    if (!file) { reader->initialized = 0; return -1; }
+    int result = cpu_usage_sample(reader, file, percent);
+    fclose(file);
+    return result;
+}
+
+static void sensor_row(char *text, size_t capacity, const char *cpu,
+                       int gpu_valid, unsigned int gpu,
+                       int usage_valid, unsigned int usage)
+{
+    if (gpu_valid)
+        snprintf(text, capacity, "CPU %s GPU %u.0 C", cpu, gpu);
+    else if (usage_valid)
+        snprintf(text, capacity, "CPU %sC Load %u%%", cpu, usage);
+    else
+        snprintf(text, capacity, "CPU %sC Load --%%", cpu);
 }
 
 /* NVML's stable C ABI; runtime loading keeps NVIDIA optional and does not
@@ -235,6 +295,7 @@ static int x_connection_lost(Display *display)
 int panel_run(usblcd_operations *lcd)
 {
     struct gpu_reader gpu = {0};
+    struct cpu_usage_reader usage_reader = {0};
     char cpu_path[256] = "";
     char previous[2][LCD_WIDTH + 1] = {{0}};
     double next_temperature = 0, next_clock = 0, next_x = 0, next_bus = 0;
@@ -289,14 +350,17 @@ int panel_run(usblcd_operations *lcd)
         }
         if (now >= next_temperature) {
             float cpu;
-            unsigned int temperature;
-            char cpu_text[12] = "--", gpu_text[12] = "--";
+            unsigned int temperature = 0, usage = 0;
+            char cpu_text[12] = "--";
             if (read_cpu_temperature(cpu_path, sizeof(cpu_path), &cpu) == 0)
                 snprintf(cpu_text, sizeof(cpu_text), "%.1f", cpu);
-            if (gpu_temperature(&gpu, &temperature) == 0)
-                snprintf(gpu_text, sizeof(gpu_text), "%u.0", temperature);
-            snprintf(temperature_text, sizeof(temperature_text), "CPU %s GPU %s C", cpu_text, gpu_text);
-            next_temperature = now + 5;
+            int gpu_valid = gpu_temperature(&gpu, &temperature) == 0;
+            int usage_valid = read_cpu_usage(&usage_reader, &usage) == 0;
+            sensor_row(temperature_text, sizeof(temperature_text), cpu_text,
+                       gpu_valid, temperature, usage_valid, usage);
+            /* Prime a baseline at startup, then show usage after one second.
+             * Keep sampling with a GPU present so a later failure can fall back. */
+            next_temperature = now + (usage_valid ? 5 : 1);
         }
         struct media_playback playback;
         char status_row[LCD_WIDTH + 1];

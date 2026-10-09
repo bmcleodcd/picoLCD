@@ -26,7 +26,12 @@ ASAN_OPTIONS=detect_leaks=1 dbus-run-session -- ./build/test-launch
 ASAN_OPTIONS=detect_leaks=1 ./build/test-media
 ASAN_OPTIONS=detect_leaks=1 ./build/test-splash
 # Driver allocations are outside our leak-check scope; exercise real sensor APIs separately.
-ASAN_OPTIONS=detect_leaks=0 ./build/test-panel --sensors
+case "${PANEL_TEST_GPU:-required}" in
+    required) sensor_option=--sensors ;;
+    unavailable) sensor_option=--sensors-no-gpu ;;
+    *) echo 'PANEL_TEST_GPU must be required or unavailable' >&2; exit 1 ;;
+esac
+ASAN_OPTIONS=detect_leaks=0 ./build/test-panel "$sensor_option"
 ASAN_OPTIONS=detect_leaks=0 ./build/test-loop
 ./build/picolcd > build/usage.txt
 sha256sum build/picolcd build/libpicolcd.so.0 > build/release.sha256

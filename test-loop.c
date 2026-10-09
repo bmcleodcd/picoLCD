@@ -84,7 +84,7 @@ int main(void)
     lcd.settext = capture;
     assert(panel_run(&lcd) == 0);
     assert(row_writes[0] >= 10 && row_writes[0] <= 17);
-    assert(row_writes[1] >= 5 && row_writes[1] <= 6);
+    assert(row_writes[1] >= 5 && row_writes[1] <= 8);
     assert(connections >= 3 && connections <= 4);
     assert(saw_kodi && saw_retroarch && saw_return_to_date);
     assert(saw_progress && saw_volume && saw_pause);

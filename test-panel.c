@@ -16,6 +16,17 @@ int xdo_send_keysequence_window_down(const xdo_t *x, Window w, const char *key, 
     return 0;
 }
 static int writes;
+static int sample_usage(struct cpu_usage_reader *reader, const char *text,
+                         unsigned int *percent)
+{
+    FILE *file = tmpfile();
+    assert(file);
+    assert(fputs(text, file) >= 0);
+    rewind(file);
+    int result = cpu_usage_sample(reader, file, percent);
+    fclose(file);
+    return result;
+}
 static void capture_row(usblcd_operations *lcd, unsigned int row, unsigned int col, char *text)
 {
     (void)lcd; (void)row; (void)col;
@@ -31,6 +42,35 @@ int main(int argc, char **argv)
     usblcd_operations lcd = {0};
     xdo_t fake_x = {0};
     lcd.settext = capture_row;
+    {
+        struct cpu_usage_reader reader = {0};
+        unsigned int usage = 999;
+        char sensors[64];
+        assert(sample_usage(&reader, "cpu 100 20 30 400 50 6 7 8 99 99\n", &usage) == -1);
+        assert(usage == 999);
+        /* 20 busy ticks, 80 idle/I/O-wait ticks; ignore guest columns. */
+        assert(sample_usage(&reader, "cpu 110 22 33 470 60 7 9 10 199 199\n", &usage) == 0);
+        assert(usage == 20);
+        assert(sample_usage(&reader, "cpu 110 22 33 570 60 7 9 10\n", &usage) == 0 && usage == 0);
+        assert(sample_usage(&reader, "cpu 210 22 33 570 60 7 9 10\n", &usage) == 0 && usage == 100);
+        assert(sample_usage(&reader, "cpu 210 22 33 570 60 7 9 10\n", &usage) == -1);
+        assert(sample_usage(&reader, "cpu 1 0 0 1\n", &usage) == -1);
+        assert(sample_usage(&reader, "cpu 2 0 0 2\n", &usage) == 0 && usage == 50);
+        assert(sample_usage(&reader, "cpu broken\n", &usage) == -1 && !reader.initialized);
+        assert(sample_usage(&reader, "cpu0 1 2 3 4\n", &usage) == -1);
+        assert(sample_usage(&reader, "cpu 100 0 0 100\n", &usage) == -1);
+        assert(sample_usage(&reader, "cpu 101 0 0 109\n", &usage) == 0 && usage == 10);
+        sensor_row(sensors, sizeof(sensors), "50.0", 1, 60, 1, 20);
+        assert(strcmp(sensors, "CPU 50.0 GPU 60.0 C") == 0);
+        sensor_row(sensors, sizeof(sensors), "50.0", 0, 0, 1, 20);
+        assert(strcmp(sensors, "CPU 50.0C Load 20%") == 0);
+        sensor_row(sensors, sizeof(sensors), "100.0", 0, 0, 1, 100);
+        assert(strcmp(sensors, "CPU 100.0C Load 100%") == 0 && strlen(sensors) <= 20);
+        sensor_row(sensors, sizeof(sensors), "--", 0, 0, 0, 0);
+        assert(strcmp(sensors, "CPU --C Load --%") == 0);
+        sensor_row(sensors, sizeof(sensors), "50.0", 1, 60, 1, 20);
+        assert(strcmp(sensors, "CPU 50.0 GPU 60.0 C") == 0);
+    }
     make_row(row, "1234567890123456789012345");
     assert(strcmp(row, "12345678901234567890") == 0);
     make_row(row, "CPU -- GPU -- C");
@@ -61,15 +101,33 @@ int main(int argc, char **argv)
         assert(read_cpu_temperature(missing, sizeof(missing), &cpu) == -1);
         assert(cpu == 99 && missing[0] == '\0');
     }
-    if (argc > 1 && strcmp(argv[1], "--sensors") == 0) {
+    if (argc > 1 && (strcmp(argv[1], "--sensors") == 0 ||
+                     strcmp(argv[1], "--sensors-no-gpu") == 0)) {
         struct gpu_reader gpu = {0};
         char path[256] = "";
         float cpu;
-        unsigned int temperature;
+        struct cpu_usage_reader usage_reader = {0};
+        unsigned int usage;
+        unsigned int temperature = 201;
         assert(read_cpu_temperature(path, sizeof(path), &cpu) == 0);
-        assert(gpu_temperature(&gpu, &temperature) == 0);
-        printf("Live sensors: CPU %.1f C (%s), GPU %u C\n", cpu, path, temperature);
+        assert(read_cpu_usage(&usage_reader, &usage) == -1);
+        usleep(200000);
+        assert(read_cpu_usage(&usage_reader, &usage) == 0 && usage <= 100);
+        printf("Live CPU usage: %u%%\n", usage);
+        if (strcmp(argv[1], "--sensors-no-gpu") == 0) {
+            /* Intel-only hosts must keep the unavailable reading unavailable,
+             * including subsequent retries, rather than inventing a value. */
+            assert(gpu_temperature(&gpu, &temperature) == -1);
+            assert(temperature == 201);
+            assert(gpu_temperature(&gpu, &temperature) == -1);
+            assert(temperature == 201);
+            printf("Live sensors: CPU %.1f C (%s), GPU unavailable as expected\n", cpu, path);
+        } else {
+            assert(gpu_temperature(&gpu, &temperature) == 0);
+            printf("Live sensors: CPU %.1f C (%s), GPU %u C\n", cpu, path, temperature);
+        }
         gpu_close(&gpu);
+        assert(gpu.library == NULL && gpu.initialized == 0);
     }
     puts("Panel tests passed");
     return 0;
