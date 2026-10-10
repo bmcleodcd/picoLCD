@@ -12,6 +12,7 @@
 #include <dlfcn.h>
 #include <dbus/dbus.h>
 #include <xdo.h>
+#include <X11/extensions/Xrandr.h>
 #include "panel.h"
 #include "media.h"
 #include "picolcd-common.h"
@@ -22,6 +23,9 @@
 #define F1_KEY 3
 #define MARQUEE_INTERVAL 0.4
 #define MARQUEE_GAP 3
+#ifndef DISPLAY_STATE_PATH
+#define DISPLAY_STATE_PATH "/run/picolcd-display-mode"
+#endif
 
 static const char *const keymap[KEY_COUNT] = {
     NULL, "XF86AudioRaiseVolume", "XF86AudioLowerVolume", NULL,
@@ -65,6 +69,8 @@ static void update_row(usblcd_operations *lcd, int index,
         memset(row, ' ', padding);
     }
     if (strcmp(previous, row) != 0) {
+        if (index == 1 && strstr(row, "Hz"))
+            fprintf(stderr, "Display popup sent to LCD: %s\n", row);
         lcd->settext(lcd, index, 0, row);
         memcpy(previous, row, sizeof(row));
     }
@@ -82,6 +88,148 @@ static void marquee_row(char row[LCD_WIDTH + 1], const char *text, size_t offset
         row[i] = position < length ? text[position] : ' ';
     }
     row[LCD_WIDTH] = '\0';
+}
+
+struct display_mode {
+    unsigned int width, height, centihz;
+    int interlaced;
+};
+
+struct display_overlay {
+    struct display_mode mode;
+    int initialized;
+    int replay;
+    double until;
+    char text[LCD_WIDTH + 1];
+};
+
+static int display_modes_equal(const struct display_mode *a, const struct display_mode *b)
+{
+    return a->width == b->width && a->height == b->height &&
+        a->centihz == b->centihz && a->interlaced == b->interlaced;
+}
+
+/* /run survives an X-loss service restart but is cleared at boot. Normal panel
+ * shutdown removes this baseline, keeping an ordinary startup silent. Write
+ * before X can fail: the fatal Xlib callback must not attempt stdio cleanup. */
+static void display_save(const char *path, const struct display_mode *mode, int pending)
+{
+    char temporary[256];
+    if (!path[0] || snprintf(temporary, sizeof(temporary), "%s.XXXXXX", path) >= (int)sizeof(temporary))
+        return;
+    int fd = mkstemp(temporary);
+    if (fd < 0) return;
+    FILE *file = fdopen(fd, "w");
+    if (!file) { close(fd); unlink(temporary); return; }
+    int ok = fprintf(file, "v1 %u %u %u %d %d\n", mode->width, mode->height,
+                     mode->centihz, mode->interlaced, pending) > 0;
+    if (fclose(file) != 0) ok = 0;
+    if (ok && rename(temporary, path) == 0) return;
+    unlink(temporary);
+}
+
+static void display_restore(const char *path, struct display_overlay *overlay)
+{
+    FILE *file = path[0] ? fopen(path, "r") : NULL;
+    struct display_mode mode = {0};
+    int pending = 0;
+    if (!file) return;
+    int fields = fscanf(file, "v1 %u %u %u %d %d", &mode.width, &mode.height,
+                        &mode.centihz, &mode.interlaced, &pending);
+    fclose(file);
+    if ((fields != 4 && fields != 5) || (pending != 0 && pending != 1) ||
+        !mode.width || mode.width > 65535 || !mode.height ||
+        mode.height > 65535 || !mode.centihz || mode.centihz > 100000 ||
+        (mode.interlaced != 0 && mode.interlaced != 1)) return;
+    overlay->mode = mode;
+    overlay->initialized = 1;
+    overlay->replay = pending;
+    fprintf(stderr, "Restored display baseline: %ux%u @ %u.%02uHz\n",
+            mode.width, mode.height, mode.centihz / 100, mode.centihz % 100);
+}
+
+static int display_mode_from_timing(const XRRModeInfo *timing,
+                                    struct display_mode *mode)
+{
+    if (!timing->width || !timing->height || !timing->dotClock ||
+        !timing->hTotal || !timing->vTotal) return 0;
+    double hz = (double)timing->dotClock / timing->hTotal / timing->vTotal;
+    if (timing->modeFlags & RR_Interlace) hz *= 2;
+    if (timing->modeFlags & RR_DoubleScan) hz /= 2;
+    if (hz <= 0 || hz > 1000) return 0;
+    mode->width = timing->width;
+    mode->height = timing->height;
+    mode->centihz = (unsigned int)(hz * 100 + 0.5);
+    mode->interlaced = !!(timing->modeFlags & RR_Interlace);
+    return 1;
+}
+
+/* Read the physical output timing, not the combined desktop dimensions.
+ * Without an enabled primary, use the first connected, enabled output. */
+static int read_display_mode(Display *display, struct display_mode *mode)
+{
+    Window root = DefaultRootWindow(display);
+    RROutput primary = XRRGetOutputPrimary(display, root);
+    XRRScreenResources *resources = XRRGetScreenResourcesCurrent(display, root);
+    int valid = 0;
+    if (!resources) return 0;
+    for (int i = -1; i < resources->noutput; ++i) {
+        RROutput id = i < 0 ? primary : resources->outputs[i];
+        if (id == None || (i >= 0 && id == primary)) continue;
+        XRROutputInfo *output = XRRGetOutputInfo(display, resources, id);
+        if (!output) continue;
+        RRCrtc crtc_id = output->connection == RR_Connected ? output->crtc : None;
+        XRRFreeOutputInfo(output);
+        if (!crtc_id) continue;
+        XRRCrtcInfo *crtc = XRRGetCrtcInfo(display, resources, crtc_id);
+        if (!crtc) continue;
+        for (int j = 0; j < resources->nmode; ++j) {
+            if (resources->modes[j].id == crtc->mode) {
+                valid = display_mode_from_timing(&resources->modes[j], mode);
+                break;
+            }
+        }
+        XRRFreeCrtcInfo(crtc);
+        if (valid) break;
+    }
+    XRRFreeScreenResources(resources);
+    return valid;
+}
+
+static void display_observe(struct display_overlay *overlay,
+                            const struct display_mode *mode, double now)
+{
+    int changed = overlay->initialized &&
+        (overlay->replay || !display_modes_equal(mode, &overlay->mode));
+    overlay->replay = 0;
+    if (!overlay->initialized || changed)
+        fprintf(stderr, "Display sample (%s): %ux%u @ %u.%02uHz\n",
+                changed ? "changed" : "initial", mode->width, mode->height,
+                mode->centihz / 100, mode->centihz % 100);
+    overlay->mode = *mode;
+    overlay->initialized = 1;
+    if (!changed) return;
+    /* Omit spaces for unusually wide/high-rate modes to fit the character LCD. */
+    char text[64];
+    snprintf(text, sizeof(text), "%ux%u%s @ %u.%02uHz", mode->width, mode->height,
+             mode->interlaced ? "i" : "", mode->centihz / 100, mode->centihz % 100);
+    if (strlen(text) > LCD_WIDTH)
+        snprintf(text, sizeof(text), "%ux%u%s@%u.%02uHz", mode->width, mode->height,
+                 mode->interlaced ? "i" : "", mode->centihz / 100, mode->centihz % 100);
+    make_row(overlay->text, text);
+    overlay->until = now + 3;
+}
+
+static const char *display_status(struct display_overlay *overlay, double now,
+                                  int volume_visible, const char *normal)
+{
+    if (now >= overlay->until) return normal;
+    if (volume_visible) {
+        /* Let volume finish first, then show the latest mode for three seconds. */
+        overlay->until = now + 3;
+        return normal;
+    }
+    return overlay->text;
 }
 
 static int read_cpu_temperature(char *path, size_t capacity, float *degrees)
@@ -296,6 +444,10 @@ int panel_run(usblcd_operations *lcd)
 {
     struct gpu_reader gpu = {0};
     struct cpu_usage_reader usage_reader = {0};
+    struct display_overlay display_overlay = {0};
+    double next_display = 0;
+    int randr_available = 0;
+    int display_pending = 0;
     char cpu_path[256] = "";
     char previous[2][LCD_WIDTH + 1] = {{0}};
     double next_temperature = 0, next_clock = 0, next_x = 0, next_bus = 0;
@@ -321,6 +473,7 @@ int panel_run(usblcd_operations *lcd)
     sigaction(SIGINT, &action, NULL);
     sigaction(SIGQUIT, &action, NULL);
     XSetIOErrorHandler(x_connection_lost);
+    display_restore(DISPLAY_STATE_PATH, &display_overlay);
 
     while (!stopping) {
         double now = monotonic_seconds();
@@ -362,16 +515,42 @@ int panel_run(usblcd_operations *lcd)
              * Keep sampling with a GPU present so a later failure can fall back. */
             next_temperature = now + (usage_valid ? 5 : 1);
         }
-        struct media_playback playback;
-        char status_row[LCD_WIDTH + 1];
-        media_get_playback(media, &playback);
-        media_status_row(&playback, status_row);
-        update_row(lcd, 1, previous[1], status_row[0] ? status_row : temperature_text);
         if (!x && now >= next_x) {
             x = xdo_new(":0");
             next_x = now + 2;
             sent = 0;
-            if (x) apply_keys(x, &sent, physical);
+            randr_available = 0;
+            if (x) {
+                int major = 1, minor = 3;
+                apply_keys(x, &sent, physical);
+                randr_available = XRRQueryVersion(x->xdpy, &major, &minor) &&
+                    (major > 1 || (major == 1 && minor >= 3));
+                next_display = 0;
+            }
+        }
+        if (x && randr_available && now >= next_display) {
+            struct display_mode mode;
+            if (read_display_mode(x->xdpy, &mode)) {
+                int save = !display_overlay.initialized || display_overlay.replay ||
+                    !display_modes_equal(&mode, &display_overlay.mode);
+                display_observe(&display_overlay, &mode, now);
+                if (save) {
+                    display_pending = now < display_overlay.until;
+                    display_save(DISPLAY_STATE_PATH, &mode, display_pending);
+                }
+            }
+            /* Failed/transient reads retain the last good baseline. */
+            next_display = now + 0.5;
+        }
+        struct media_playback playback;
+        char status_row[LCD_WIDTH + 1];
+        media_get_playback(media, &playback);
+        media_status_row(&playback, status_row);
+        update_row(lcd, 1, previous[1], display_status(&display_overlay, now,
+                   playback.volume_visible, status_row[0] ? status_row : temperature_text));
+        if (display_pending && now >= display_overlay.until) {
+            display_save(DISPLAY_STATE_PATH, &display_overlay.mode, 0);
+            display_pending = 0;
         }
         if (!bus && now >= next_bus) {
             DBusError error = DBUS_ERROR_INIT;
@@ -430,5 +609,6 @@ int panel_run(usblcd_operations *lcd)
     gpu_close(&gpu);
     media_stop(media);
     if (rc5) rc5_close(rc5);
+    if (DISPLAY_STATE_PATH[0]) unlink(DISPLAY_STATE_PATH);
     return result;
 }

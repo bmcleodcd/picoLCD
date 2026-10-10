@@ -25,6 +25,24 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
 - Volume/mute changes temporarily replace the bottom row with `Volume 65%` or
   `Muted` for three seconds, then restore playback status/temperatures. The initial
   volume read does not cause a popup. This reports Kodi's volume, not an external AVR.
+- Primary X11 output resolution/refresh changes show, for example,
+  `1920x1080 @ 59.94Hz` on the centred bottom row for three seconds. RandR output
+  timing is checked every half second while X is connected, including outside
+  Kodi. The initial successful sample is silent; missing/disabled outputs retain
+  the last good baseline. With no active designated primary, the first connected active
+  output is used. Fractional rates are rounded to two decimals; interlace (`i`)
+  and double-scan timing are handled. Volume takes priority and defers the latest
+  mode popup; afterward playback/temperatures return. No display settings change.
+  The last valid mode is saved atomically in `/run/picolcd-display-mode` so an
+  X-server-loss restart still detects the return from RetroArch to Kodi. Normal
+  panel shutdown removes the file, and `/run` clears at boot, keeping cold starts
+  silent. Tests cover an abrupt process exit and restored-mode comparison.
+  The cache also remembers an unfinished popup, replaying it for a full three
+  seconds after recovery even if the mode was already restored before X exited.
+  `install-display-recovery.sh` installs a backed-up service drop-in reducing
+  restart delay to one second and allowing 20 starts per minute, avoiding the
+  old five-start/five-minute limit during repeated application switches.
+  Mode changes, restored baselines and popup submissions are logged to journal.
 - A background thread keeps a dedicated Kodi TCP 9090 notification connection for
   playback/seek/volume events. Separate read-only queries refresh metadata and time
   on playback events, with a ten-second fallback (two seconds while disconnected).
@@ -38,6 +56,13 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
   a backup of the previous config. RetroArch's command interface listens on all
   network interfaces; the panel itself sends only read-only queries to localhost.
 - CPU temperature shows one decimal; GPU temperature adds a cosmetic `.0` to its integer NVML reading.
+- When NVIDIA temperature is unavailable, the idle/RetroArch row shows CPU
+  temperature and aggregate CPU usage instead, for example `CPU 50.0C Load 12%`.
+  Usage is measured from `/proc/stat` deltas across all CPUs, excludes idle and
+  I/O wait, and ranges from 0 to 100%. The first baseline shows `Load --%` for
+  approximately one second. Failed or reset counters show `--%` and retry after
+  one second. Normal sampling is every five seconds, including during playback
+  and while GPU readings are available; a recovered GPU restores its temperature.
 - Rows are space-padded and sent only when changed. CPU/GPU samples run immediately,
   then every five monotonic seconds; clock comparison runs once per second.
 - CPU sensor is discovered by `x86_pkg_temp` type. Failed sensor reads show `--`.
@@ -61,7 +86,7 @@ Windows checkout (SHA256 d416c7ac9c0deaea717c4556311cae342f6f560381a9377bc37a48e
 ## Build and verification
 
 Linux dependencies: C compiler, libusb-0.1 development package, libxdo/X11 development
-packages, pkg-config, libdbus-1 and json-c >= 0.15 development packages. NVML is an optional runtime
+packages, libxrandr-dev, pkg-config, libdbus-1 and json-c >= 0.15 development packages. NVML is an optional runtime
 dependency. Run `sh build-check.sh` to build a private binary/library and execute
 AddressSanitizer/UndefinedBehaviorSanitizer checks, an isolated session-bus launcher
 test, actual sensor queries, and a six-second loop test with simulated USB timeouts
@@ -71,6 +96,12 @@ volume overlay expiry, fragmented/concatenated JSON and notifications, query
 timeouts, disconnects, and worker shutdown. Loop tests exercise bottom-row progress,
 volume, pause and restoration as well as top-row transitions. The live panel is not
 accessed by these tests.
+
+Display tests cover primary selection, disabled-primary fallback, unavailable
+outputs, fractional/interlaced/double-scan timing, initial baseline suppression,
+resolution and refresh-only changes, repeated changes, expiry and volume priority.
+`DISPLAY=:0 XAUTHORITY=/home/kodi/.Xauthority ./build/test-panel --display` reads
+the live output without altering it or accessing the LCD.
 
 The legacy SDK emits warnings in unrelated font/widget/parser code. The custom
 panel module builds without warnings. This does not claim to repair all SDK code.
