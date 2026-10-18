@@ -1,4 +1,5 @@
 #include <assert.h>
+#define DISPLAY_STATE_PATH ""
 #define xdo_new test_xdo_new
 #define media_start test_media_start
 #define media_snapshot test_media_snapshot

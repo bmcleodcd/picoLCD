@@ -35,6 +35,17 @@ static void capture_row(usblcd_operations *lcd, unsigned int row, unsigned int c
 }
 int main(int argc, char **argv)
 {
+    if (argc > 1 && strcmp(argv[1], "--display") == 0) {
+        Display *display = XOpenDisplay(NULL);
+        struct display_mode mode;
+        assert(display);
+        assert(read_display_mode(display, &mode));
+        printf("Live primary output: %ux%u%s @ %u.%02uHz\n", mode.width,
+               mode.height, mode.interlaced ? "i" : "", mode.centihz / 100,
+               mode.centihz % 100);
+        XCloseDisplay(display);
+        return 0;
+    }
     char row[21], previous[21] = {0};
     unsigned char data[2];
     unsigned int state = 0;
