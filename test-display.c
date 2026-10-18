@@ -11,6 +11,8 @@
 #define XRRFreeOutputInfo fake_free_output
 #define XRRFreeCrtcInfo fake_free_crtc
 #include "src/panel.c"
+#define DISPLAY_PROBE_NO_MAIN
+#include "src/display-probe.c"
 
 static RROutput primary = 2, outputs[] = {1, 2};
 static XRRModeInfo timings[] = {

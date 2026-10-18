@@ -52,12 +52,12 @@ int main(void) {
  assert(counts[0][0]==10 && counts[0][1]==5 && counts[0][2]==5);
  assert(counts[30][0]==12 && counts[18][0]==9 && counts[22][0]==5 && counts[26][0]==5);
  struct ortek_mouse_state s={0};int dx,dy;unsigned buttons;
- ortek_mouse_update(&s,28,1,1);ortek_mouse_step(&s,1,&dx,&dy,&buttons);assert(dx==-6 && dy==0 && buttons==1);
+ ortek_mouse_update(&s,28,1,1);ortek_mouse_step(&s,1,&dx,&dy,&buttons);assert(dx==-2 && dy==0 && buttons==1);
  ortek_mouse_step(&s,1.01,&dx,&dy,&buttons);assert(!dx && !dy && buttons==1);
  for(int i=1;i<=14;i++)ortek_mouse_update(&s,28,1,1+i*.1);
- ortek_mouse_step(&s,2.4,&dx,&dy,&buttons);assert(dx==-24 && dy==0 && buttons==1);
+ ortek_mouse_step(&s,2.4,&dx,&dy,&buttons);assert(dx==-8 && dy==0 && buttons==1);
  ortek_mouse_step(&s,2.61,&dx,&dy,&buttons);assert(!dx && !dy && buttons==0);
- ortek_mouse_update(&s,18,3,3);ortek_mouse_step(&s,3,&dx,&dy,&buttons);assert(dx==6 && dy==-6 && buttons==3);
+ ortek_mouse_update(&s,18,3,3);ortek_mouse_step(&s,3,&dx,&dy,&buttons);assert(dx==2 && dy==-2 && buttons==3);
  ortek_mouse_update(&s,0,0,3.1);ortek_mouse_step(&s,3.1,&dx,&dy,&buttons);assert(!dx && !dy && !buttons);
  puts("Mouse acceleration, diagonal, pacing, buttons, stop and lost-release timeout passed");
 }

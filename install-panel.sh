@@ -8,6 +8,10 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 sha256sum -c build/release.sha256
+if [ ! -c /dev/uinput ]; then modprobe uinput; fi
+test -c /dev/uinput
+mkdir -p /etc/modules-load.d
+printf 'uinput\n' > /etc/modules-load.d/picolcd-uinput.conf
 stamp=$(date +%Y%m%d-%H%M%S)
 release=/usr/local/lib/picolcd-panel/$stamp
 backup=/var/backups/picolcd-panel-$stamp
@@ -15,6 +19,7 @@ mkdir -p "$release" "$backup"
 cp -a /usr/local/bin/picolcd "$backup/picolcd"
 systemctl cat panel.service > "$backup/panel.service.txt"
 install -m 755 build/picolcd build/libpicolcd.so.0 "$release/"
+if grep -q "build/picolcd-display-probe" build/release.sha256; then install -m 755 build/picolcd-display-probe "$release/"; fi
 rollback() {
     systemctl stop panel.service || true
     cp -a "$backup/picolcd" /usr/local/bin/.picolcd-restore

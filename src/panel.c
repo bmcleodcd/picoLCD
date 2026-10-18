@@ -11,8 +11,8 @@
 #include <glob.h>
 #include <dlfcn.h>
 #include <dbus/dbus.h>
-#include <xdo.h>
-#include <X11/extensions/Xrandr.h>
+#include "input.h"
+#include "display-monitor.h"
 #include "panel.h"
 #include "media.h"
 #include "picolcd-common.h"
@@ -38,7 +38,7 @@ static double monotonic_seconds(void);
 struct ir_binding { char sequence[96]; int repeat; };
 static struct ir_binding ir_bindings[64];
 struct ir_context {
-    xdo_t *x; struct ortek_repeat repeat; int dongle;
+    struct panel_input *input; struct ortek_repeat repeat; int dongle;
     struct ortek_mouse_state mouse;
     unsigned mouse_sent;
 };
@@ -82,17 +82,14 @@ static void ortek_received(void *opaque,unsigned key,unsigned phase)
     int emit=ortek_action(&ctx->repeat,key,phase,monotonic_seconds(),ir_bindings[key].repeat);
     if(phase==0) fprintf(stderr,"Ortek IR command=%u mapping=%s receiver=%s\n",key,
         ir_bindings[key].sequence[0]?ir_bindings[key].sequence:"unmapped",ctx->dongle?"USB dongle present":"LCD");
-    if(emit && ctx->x && !ctx->dongle && ir_bindings[key].sequence[0]) {
-        const char *sequence=ir_bindings[key].sequence;
-        if(strcmp(sequence,"mouse:1")==0 || strcmp(sequence,"mouse:3")==0)
-            xdo_click_window(ctx->x,CURRENTWINDOW,sequence[6]-'0');
-        else xdo_send_keysequence_window(ctx->x,CURRENTWINDOW,sequence,12000);
+    if(emit && ctx->input && !ctx->dongle && ir_bindings[key].sequence[0]) {
+        panel_input_tap(ctx->input,ir_bindings[key].sequence);
     }
 }
 static void ortek_mouse_release(struct ir_context *ctx)
 {
-    if(ctx->x) for(unsigned bit=0;bit<2;bit++)
-        if(ctx->mouse_sent&(1u<<bit)) xdo_mouse_up(ctx->x,CURRENTWINDOW,bit?3:1);
+    if(ctx->input) for(unsigned bit=0;bit<2;bit++)
+        if(ctx->mouse_sent&(1u<<bit)) panel_input_button(ctx->input,bit?3:1,0);
     ctx->mouse_sent=0;
     memset(&ctx->mouse,0,sizeof(ctx->mouse));
 }
@@ -102,20 +99,20 @@ static void ortek_mouse_received(void *opaque,unsigned direction,unsigned button
     if(direction!=ctx->mouse.direction || buttons!=ctx->mouse.buttons)
         fprintf(stderr,"Ortek mouse direction=%u buttons=%u receiver=%s\n",direction,buttons,
                 ctx->dongle?"USB dongle present":"LCD");
-    if(ctx->dongle || !ctx->x) return;
+    if(ctx->dongle || !ctx->input) return;
     ortek_mouse_update(&ctx->mouse,direction,buttons,monotonic_seconds());
 }
 static void ortek_mouse_output(struct ir_context *ctx,double now)
 {
-    if(ctx->dongle || !ctx->x) { ortek_mouse_release(ctx);return; }
+    if(ctx->dongle || !ctx->input) { ortek_mouse_release(ctx);return; }
     int dx,dy;unsigned buttons;
     ortek_mouse_step(&ctx->mouse,now,&dx,&dy,&buttons);
     for(unsigned bit=0;bit<2;bit++) if((buttons^ctx->mouse_sent)&(1u<<bit)) {
-        if(buttons&(1u<<bit)) xdo_mouse_down(ctx->x,CURRENTWINDOW,bit?3:1);
-        else xdo_mouse_up(ctx->x,CURRENTWINDOW,bit?3:1);
+        if(buttons&(1u<<bit)) panel_input_button(ctx->input,bit?3:1,1);
+        else panel_input_button(ctx->input,bit?3:1,0);
     }
     ctx->mouse_sent=buttons;
-    if(dx || dy) xdo_move_mouse_relative(ctx->x,dx,dy);
+    if(dx || dy) panel_input_move(ctx->input,dx,dy);
 }
 static volatile sig_atomic_t stopping;
 
@@ -175,11 +172,6 @@ static void marquee_row(char row[LCD_WIDTH + 1], const char *text, size_t offset
     row[LCD_WIDTH] = '\0';
 }
 
-struct display_mode {
-    unsigned int width, height, centihz;
-    int interlaced;
-};
-
 struct display_overlay {
     struct display_mode mode;
     int initialized;
@@ -231,54 +223,6 @@ static void display_restore(const char *path, struct display_overlay *overlay)
     overlay->replay = pending;
     fprintf(stderr, "Restored display baseline: %ux%u @ %u.%02uHz\n",
             mode.width, mode.height, mode.centihz / 100, mode.centihz % 100);
-}
-
-static int display_mode_from_timing(const XRRModeInfo *timing,
-                                    struct display_mode *mode)
-{
-    if (!timing->width || !timing->height || !timing->dotClock ||
-        !timing->hTotal || !timing->vTotal) return 0;
-    double hz = (double)timing->dotClock / timing->hTotal / timing->vTotal;
-    if (timing->modeFlags & RR_Interlace) hz *= 2;
-    if (timing->modeFlags & RR_DoubleScan) hz /= 2;
-    if (hz <= 0 || hz > 1000) return 0;
-    mode->width = timing->width;
-    mode->height = timing->height;
-    mode->centihz = (unsigned int)(hz * 100 + 0.5);
-    mode->interlaced = !!(timing->modeFlags & RR_Interlace);
-    return 1;
-}
-
-/* Read the physical output timing, not the combined desktop dimensions.
- * Without an enabled primary, use the first connected, enabled output. */
-static int read_display_mode(Display *display, struct display_mode *mode)
-{
-    Window root = DefaultRootWindow(display);
-    RROutput primary = XRRGetOutputPrimary(display, root);
-    XRRScreenResources *resources = XRRGetScreenResourcesCurrent(display, root);
-    int valid = 0;
-    if (!resources) return 0;
-    for (int i = -1; i < resources->noutput; ++i) {
-        RROutput id = i < 0 ? primary : resources->outputs[i];
-        if (id == None || (i >= 0 && id == primary)) continue;
-        XRROutputInfo *output = XRRGetOutputInfo(display, resources, id);
-        if (!output) continue;
-        RRCrtc crtc_id = output->connection == RR_Connected ? output->crtc : None;
-        XRRFreeOutputInfo(output);
-        if (!crtc_id) continue;
-        XRRCrtcInfo *crtc = XRRGetCrtcInfo(display, resources, crtc_id);
-        if (!crtc) continue;
-        for (int j = 0; j < resources->nmode; ++j) {
-            if (resources->modes[j].id == crtc->mode) {
-                valid = display_mode_from_timing(&resources->modes[j], mode);
-                break;
-            }
-        }
-        XRRFreeCrtcInfo(crtc);
-        if (valid) break;
-    }
-    XRRFreeScreenResources(resources);
-    return valid;
 }
 
 static void display_observe(struct display_overlay *overlay,
@@ -468,18 +412,18 @@ static unsigned int key_state(const unsigned char data[2])
 
 /* Return the F1 release edge. Release old keys before pressing new keys;
  * repeated identical reports do not generate duplicate key-down events. */
-static int apply_keys(xdo_t *x, unsigned int *previous, unsigned int state)
+static int apply_keys(struct panel_input *input, unsigned int *previous, unsigned int state)
 {
     unsigned int released = *previous & ~state;
     unsigned int pressed = state & ~*previous;
     int key;
-    if (x) {
+    if (input) {
         for (key = 1; key < KEY_COUNT; ++key)
             if (keymap[key] && (released & (1u << key)))
-                xdo_send_keysequence_window_up(x, CURRENTWINDOW, keymap[key], 0);
+                panel_input_hold(input,keymap[key],0);
         for (key = 1; key < KEY_COUNT; ++key)
             if (keymap[key] && (pressed & (1u << key)))
-                xdo_send_keysequence_window_down(x, CURRENTWINDOW, keymap[key], 0);
+                panel_input_hold(input,keymap[key],1);
     }
     *previous = state;
     return (released & (1u << F1_KEY)) != 0;
@@ -514,28 +458,16 @@ static void check_launch(DBusPendingCall **pending)
     }
 }
 
-/* Xlib cannot recover a dead connection safely. The service restarts on this
- * failure; ordinary missing-display connections are retried in the loop. */
-static int x_connection_lost(Display *display)
-{
-    static const char message[] = "X11 connection lost; restarting panel connection\n";
-    (void)display;
-    ssize_t written = write(STDERR_FILENO, message, sizeof(message) - 1);
-    (void)written;
-    _exit(EXIT_FAILURE);
-}
-
 int panel_run(usblcd_operations *lcd)
 {
     struct gpu_reader gpu = {0};
     struct cpu_usage_reader usage_reader = {0};
     struct display_overlay display_overlay = {0};
-    double next_display = 0;
-    int randr_available = 0;
+    struct display_monitor display_monitor={.fd=-1};
     int display_pending = 0;
     char cpu_path[256] = "";
     char previous[2][LCD_WIDTH + 1] = {{0}};
-    double next_temperature = 0, next_clock = 0, next_x = 0, next_bus = 0;
+    double next_temperature = 0, next_clock = 0, next_input = 0, next_bus = 0;
     double next_scroll = 0;
     size_t scroll_offset = 0;
     char date_text[64] = "Time unavailable";
@@ -544,7 +476,8 @@ int panel_run(usblcd_operations *lcd)
     enum media_source last_source = MEDIA_NONE;
     struct media_monitor *media = media_start();
     if (!media) fprintf(stderr, "Media monitor unavailable; showing date\n");
-    xdo_t *x = NULL;
+    struct panel_input input={.keyboard=-1,.mouse=-1};
+    double input_ready=0;
     unsigned int physical = 0, sent = 0;
     DBusConnection *bus = NULL;
     DBusPendingCall *pending = NULL;
@@ -560,7 +493,6 @@ int panel_run(usblcd_operations *lcd)
     sigaction(SIGTERM, &action, NULL);
     sigaction(SIGINT, &action, NULL);
     sigaction(SIGQUIT, &action, NULL);
-    XSetIOErrorHandler(x_connection_lost);
     display_restore(DISPLAY_STATE_PATH, &display_overlay);
 
     while (!stopping) {
@@ -603,32 +535,29 @@ int panel_run(usblcd_operations *lcd)
              * Keep sampling with a GPU present so a later failure can fall back. */
             next_temperature = now + (usage_valid ? 5 : 1);
         }
-        if (!x && now >= next_x) {
-            x = xdo_new(":0");
-            next_x = now + 2;
-            sent = 0;
-            randr_available = 0;
-            if (x) {
-                int major = 1, minor = 3;
-                apply_keys(x, &sent, physical);
-                randr_available = XRRQueryVersion(x->xdpy, &major, &minor) &&
-                    (major > 1 || (major == 1 && minor >= 3));
-                next_display = 0;
-            }
+        if(input.failed) {
+            fprintf(stderr,"uinput write failed; recreating input devices\n");
+            panel_input_close(&input);ir.input=NULL;sent=0;ir.mouse_sent=0;
+            memset(&ir.mouse,0,sizeof(ir.mouse));next_input=now+2;
         }
-        if (x && randr_available && now >= next_display) {
-            struct display_mode mode;
-            if (read_display_mode(x->xdpy, &mode)) {
-                int save = !display_overlay.initialized || display_overlay.replay ||
-                    !display_modes_equal(&mode, &display_overlay.mode);
-                display_observe(&display_overlay, &mode, now);
-                if (save) {
-                    display_pending = now < display_overlay.until;
-                    display_save(DISPLAY_STATE_PATH, &mode, display_pending);
-                }
+        if(input.keyboard<0 && now>=next_input) {
+            next_input=now+2;
+            if(panel_input_open(&input)==0) {
+                input_ready=now+0.3;
+                fprintf(stderr,"uinput keyboard and mouse created\n");
+            } else fprintf(stderr,"uinput unavailable: %s\n",strerror(errno));
+        }
+        ir.input=(input.keyboard>=0 && now>=input_ready)?&input:NULL;
+        if(ir.input)apply_keys(ir.input,&sent,physical);
+        struct display_mode mode;
+        if(display_monitor_poll(&display_monitor,now,&mode)) {
+            int save=!display_overlay.initialized || display_overlay.replay ||
+                !display_modes_equal(&mode,&display_overlay.mode);
+            display_observe(&display_overlay,&mode,now);
+            if(save) {
+                display_pending=now<display_overlay.until;
+                display_save(DISPLAY_STATE_PATH,&mode,display_pending);
             }
-            /* Failed/transient reads retain the last good baseline. */
-            next_display = now + 0.5;
         }
         struct media_playback playback;
         char status_row[LCD_WIDTH + 1];
@@ -662,7 +591,6 @@ int panel_run(usblcd_operations *lcd)
         if(now>=next_dongle_check) {
             ir.dongle=ortek_dongle_present(); next_dongle_check=now+1;
         }
-        ir.x=x;
         ortek_mouse_output(&ir,now);
         errno = 0;
         usblcd_event *event = picolcd_read_events_timeout(lcd, (ir.mouse.direction || ir.mouse_sent) ? 12 : 200);
@@ -678,16 +606,11 @@ int panel_run(usblcd_operations *lcd)
             unsigned int state = key_state(event->data);
             int launch = (physical & (1u << F1_KEY)) && !(state & (1u << F1_KEY));
             physical = state;
-            apply_keys(x, &sent, state);
+            if(ir.input)apply_keys(ir.input, &sent, state);
             if (launch && !pending) {
-                /* Close X before systemd stops Kodi's X server. */
-                if (x) {
-                    apply_keys(x, &sent, 0);
-                    ortek_mouse_release(&ir);
-                    xdo_free(x);
-                    x = NULL;
-                }
-                next_x = monotonic_seconds() + 2;
+                /* Input remains available while Kodi's X server is replaced. */
+                if(ir.input)apply_keys(ir.input,&sent,0);
+                ortek_mouse_release(&ir);
                 if (bus) pending = start_retroarch(bus);
                 else fprintf(stderr, "Cannot start RetroArch: system bus unavailable\n");
             }
@@ -699,7 +622,9 @@ int panel_run(usblcd_operations *lcd)
         free(event->data);
         free(event);
     }
-    if (x) { ir.x=x; ortek_mouse_release(&ir); apply_keys(x, &sent, 0); xdo_free(x); }
+    ortek_mouse_release(&ir);
+    panel_input_close(&input);
+    display_monitor_close(&display_monitor);
     if (pending) { dbus_pending_call_cancel(pending); dbus_pending_call_unref(pending); }
     if (bus) { dbus_connection_close(bus); dbus_connection_unref(bus); }
     gpu_close(&gpu);

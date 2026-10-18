@@ -137,8 +137,8 @@ void ortek_mouse_step(struct ortek_mouse_state *s,double now,int *dx,int *dy,uns
     if(!s->direction || now<s->next_step) return;
     double held=now-s->started;
     int gain=held<0.696?1:held<0.992?2:held<1.288?3:4;
-    /* X relative warps bypass the acceleration applied to the USB mouse. */
-    const int pointer_scale=3;
+    /* Native input now receives the same raw steps as the USB receiver. */
+    const int pointer_scale=1;
     *dx=xs[s->direction&15]*gain*pointer_scale;
     *dy=ys[s->direction&15]*gain*pointer_scale;
     s->next_step=now+0.024;

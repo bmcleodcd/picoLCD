@@ -155,3 +155,11 @@ To restore an original backup, stop panel.service, run the staged binary's
 `eeprom-restore /var/backups/picolcd-splash-XXXXXXXX/eeprom.bin`, then start the
 service again. Run those operations with sudo. Keep the backup until the new
 power-on image has been checked.
+
+## Native keyboard and mouse input
+
+The main panel now uses Linux uinput for physical panel buttons and Ortek IR
+keyboard/mouse input. libxdo and X11 linkage have been removed from the main
+binary. An optional isolated XRandR helper preserves display-mode popups without
+making input depend on X. All 46 existing map entries remain supported, with GB
+and US # handling and reference-counted modifiers/held buttons. See UINPUT.md.

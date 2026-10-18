@@ -1,6 +1,8 @@
 #include <assert.h>
 #define DISPLAY_STATE_PATH ""
-#define xdo_new test_xdo_new
+#define panel_input_open test_input_open
+#define display_monitor_poll test_display_poll
+#define display_monitor_close test_display_close
 #define media_start test_media_start
 #define media_snapshot test_media_snapshot
 #define media_stop test_media_stop
@@ -37,12 +39,13 @@ enum media_source test_media_snapshot(struct media_monitor *monitor, char *title
     title[0] = '\0';
     return MEDIA_NONE;
 }
-xdo_t *test_xdo_new(const char *display)
+int test_input_open(struct panel_input *input)
 {
-    (void)display;
-    ++connections;
-    return NULL; /* X unavailable throughout: panel must keep working and retry. */
+ (void)input;++connections;errno=ENOENT;return -1;
 }
+int test_display_poll(struct display_monitor *monitor,double now,struct display_mode *mode)
+{(void)monitor;(void)now;(void)mode;return 0;}
+void test_display_close(struct display_monitor *monitor){(void)monitor;}
 usblcd_event *picolcd_read_events_timeout(usblcd_operations *lcd, int timeout_ms)
 {
     (void)lcd;
@@ -90,7 +93,7 @@ int main(void)
     assert(saw_kodi && saw_retroarch && saw_return_to_date);
     assert(saw_progress && saw_volume && saw_pause);
     dbus_shutdown();
-    printf("Loop test passed: %d timeouts, %d X retries, %d/%d row writes\n",
+    printf("Loop test passed: %d timeouts, %d input retries, %d/%d row writes\n",
            reads, connections, row_writes[0], row_writes[1]);
     return 0;
 }

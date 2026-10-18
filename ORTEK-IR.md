@@ -87,3 +87,12 @@ To roll back, stop panel.service, restore the chosen saved executable link
 with cp -a to a temporary link in /usr/local/bin, atomically rename it to
 /usr/local/bin/picolcd, then start panel.service. The Power mapping backup is
 /home/kodi/ir-signal-test/ortek-map-before-power.
+
+## Native input migration, 18 October 2026
+
+The X11 injection architecture described above has been replaced by native
+uinput keyboard and mouse devices. See UINPUT.md for current architecture,
+validation, deployed releases and rollback notes. The 46-button map is unchanged.
+The main panel process has no X11/libxdo linkage; resolution sampling is isolated
+in an optional helper. Mouse speed now uses raw USB-equivalent steps through
+the normal system input stack, removing the former X-warp compensation.

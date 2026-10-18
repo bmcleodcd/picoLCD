@@ -3,17 +3,11 @@
 
 static char actions[128];
 static unsigned int actions_used;
-int xdo_send_keysequence_window_up(const xdo_t *x, Window w, const char *key, useconds_t delay)
+int panel_input_hold(struct panel_input *input,const char *key,int down)
 {
-    (void)x; (void)w; (void)delay;
-    actions_used += snprintf(actions + actions_used, sizeof(actions) - actions_used, "U%s;", key);
-    return 0;
-}
-int xdo_send_keysequence_window_down(const xdo_t *x, Window w, const char *key, useconds_t delay)
-{
-    (void)x; (void)w; (void)delay;
-    actions_used += snprintf(actions + actions_used, sizeof(actions) - actions_used, "D%s;", key);
-    return 0;
+ (void)input;
+ actions_used+=snprintf(actions+actions_used,sizeof(actions)-actions_used,"%c%s;",down?'D':'U',key);
+ return 0;
 }
 static int writes;
 static int sample_usage(struct cpu_usage_reader *reader, const char *text,
@@ -35,23 +29,24 @@ static void capture_row(usblcd_operations *lcd, unsigned int row, unsigned int c
 }
 int main(int argc, char **argv)
 {
-    if (argc > 1 && strcmp(argv[1], "--display") == 0) {
-        Display *display = XOpenDisplay(NULL);
-        struct display_mode mode;
-        assert(display);
-        assert(read_display_mode(display, &mode));
-        printf("Live primary output: %ux%u%s @ %u.%02uHz\n", mode.width,
-               mode.height, mode.interlaced ? "i" : "", mode.centihz / 100,
-               mode.centihz % 100);
-        XCloseDisplay(display);
-        return 0;
+    if(argc>1 && !strcmp(argv[1],"--display")) {
+        struct display_monitor monitor={.fd=-1};struct display_mode mode;
+        for(int i=0;i<30;i++) {
+            if(display_monitor_poll(&monitor,monotonic_seconds(),&mode)) {
+                printf("Live primary output: %ux%u%s @ %u.%02uHz\n",mode.width,mode.height,
+                       mode.interlaced?"i":"",mode.centihz/100,mode.centihz%100);
+                display_monitor_close(&monitor);return 0;
+            }
+            usleep(100000);
+        }
+        display_monitor_close(&monitor);return 1;
     }
     char row[21], previous[21] = {0};
     unsigned char data[2];
     unsigned int state = 0;
     unsigned int a, b;
     usblcd_operations lcd = {0};
-    xdo_t fake_x = {0};
+    struct panel_input fake_input = {0};
     lcd.settext = capture_row;
     {
         struct cpu_usage_reader reader = {0};
@@ -98,10 +93,10 @@ int main(int argc, char **argv)
     }
     data[0] = 8; data[1] = 9;
     assert(key_state(data) == ((1u << 8) | (1u << 9)));
-    apply_keys(&fake_x, &state, 1u << 8);
-    apply_keys(&fake_x, &state, 1u << 8);
-    apply_keys(&fake_x, &state, 1u << 9);
-    apply_keys(&fake_x, &state, 0);
+    apply_keys(&fake_input, &state, 1u << 8);
+    apply_keys(&fake_input, &state, 1u << 8);
+    apply_keys(&fake_input, &state, 1u << 9);
+    apply_keys(&fake_input, &state, 0);
     assert(strcmp(actions, "DLeft;ULeft;DRight;URight;") == 0);
     assert(!apply_keys(NULL, &state, 1u << F1_KEY));
     assert(apply_keys(NULL, &state, 0));
