@@ -18,6 +18,7 @@
 #include "picolcd-common.h"
 #include "ortek.h"
 #include "rc6-mce.h"
+#include "xbox-dvd.h"
 
 #define LCD_WIDTH 20
 #define KEY_COUNT 16
@@ -43,6 +44,7 @@ struct ir_context {
     struct ortek_mouse_state mouse;
     unsigned mouse_sent;
     struct rc6_mce_repeat hp_repeat;
+    struct xbox_repeat xbox_repeat;
 };
 static void hp_received(void *opaque,unsigned key,unsigned toggle)
 {
@@ -77,6 +79,34 @@ static void hp_received(void *opaque,unsigned key,unsigned toggle)
     if(emit) fprintf(stderr,"HP RC6 command=0x%02x toggle=%u mapping=%s receiver=LCD\n",
         key,toggle,seq?seq:"unmapped");
     if(emit && seq && ctx->input) panel_input_tap(ctx->input,seq);
+}
+static void xbox_received(void *opaque,unsigned key)
+{
+    struct ir_context *ctx=opaque;
+    const char *seq=NULL;int repeat=0;
+    switch(key) {
+    case 0xa6:seq="Up";repeat=1;break;
+    case 0xa7:seq="Down";repeat=1;break;
+    case 0xa8:seq="Right";repeat=1;break;
+    case 0xa9:seq="Left";repeat=1;break;
+    case 0x0b:seq="Return";break;case 0xd8:seq="Escape";break;
+    case 0xc3:seq="i";break;case 0xea:seq="p";break;
+    case 0xe6:seq="space";break;case 0xe0:seq="x";break;
+    case 0xe2:seq="r";break;case 0xe3:seq="f";break;
+    case 0xdd:seq="XF86AudioPrev";break;case 0xdf:seq="XF86AudioNext";break;
+    case 0xf7:seq="m";break;case 0xe5:seq="c";break;
+    case 0xd5:seq="z";break;
+    case 0xcf:seq="0";break;case 0xce:seq="1";break;
+    case 0xcd:seq="2";break;case 0xcc:seq="3";break;
+    case 0xcb:seq="4";break;case 0xca:seq="5";break;
+    case 0xc9:seq="6";break;case 0xc8:seq="7";break;
+    case 0xc7:seq="8";break;case 0xc6:seq="9";break;
+    default:break;
+    }
+    int emit=xbox_action(&ctx->xbox_repeat,key,monotonic_seconds(),repeat);
+    if(emit)fprintf(stderr,"Xbox DVD command=0x%02x mapping=%s receiver=LCD\n",
+        key,seq?seq:"unmapped");
+    if(emit && seq && ctx->input)panel_input_tap(ctx->input,seq);
 }
 static int ortek_dongle_present(void)
 {
@@ -519,6 +549,7 @@ int panel_run(usblcd_operations *lcd)
     DBusPendingCall *pending = NULL;
     struct ortek_decoder ortek = {0}, mouse_decoder = {0};
     struct rc6_mce_decoder hp_decoder = {0};
+    struct xbox_decoder xbox_decoder = {0};
     struct ir_context ir = {0};
     double next_dongle_check=0;
     ortek_load_map();
@@ -656,6 +687,7 @@ int panel_run(usblcd_operations *lcd)
             ortek_feed(&ortek,event->data,event->length,received_at,ortek_received,&ir);
             ortek_mouse_feed(&mouse_decoder,event->data,event->length,received_at,ortek_mouse_received,&ir);
             rc6_mce_feed(&hp_decoder,event->data,event->length,received_at,hp_received,&ir);
+            xbox_feed(&xbox_decoder,event->data,event->length,received_at,xbox_received,&ir);
         }
         free(event->data);
         free(event);
