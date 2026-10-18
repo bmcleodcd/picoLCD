@@ -11,6 +11,19 @@ IR receiver handles these remotes without separate remote-specific receivers.
 An optional XRandR helper supplies display-mode information; input works
 independently of X11. The main panel binary does not link libxdo, X11 or XRandR.
 
+## Licence and attribution
+
+This fork is distributed under the GNU General Public License, version 2
+(GPLv2). See [COPYING](COPYING) for the full licence and warranty disclaimer.
+The original picoLCD SDK is by Nicu Pavel / iTuner Corporation (Mini-Box);
+original copyright notices and [AUTHORS](AUTHORS) are retained.
+
+Changes by bmcleodcd, 2023-2026, add the Linux media-center panel and related
+features described in [ChangeLog](ChangeLog). This is a modified version of
+the original SDK. Modification/licence notices were added on 2026-10-18.
+Redistributed modified versions remain subject to GPLv2; distribution of
+binaries must satisfy its corresponding-source requirements.
+
 ## Build and maintenance
 
 See [AGENTS.md](AGENTS.md) for dependencies, architecture, remote protocols,

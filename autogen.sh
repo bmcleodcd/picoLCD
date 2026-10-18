@@ -1,4 +1,8 @@
 #!/bin/sh
+# Changes by bmcleodcd: 2026-10-10.
+# Modification/licence notice added by bmcleodcd: 2026-10-18.
+# This file is part of picoLCD and is distributed under the GNU General
+# Public License, version 2. See COPYING for the terms and warranty disclaimer.
 # Run this to set up the build system: configure, makefiles, etc.
 # (based on the version in enlightenment's cvs)
 

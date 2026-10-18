@@ -1,3 +1,9 @@
+/*
+ * Changes by bmcleodcd: 2026-10-18.
+ * Modification/licence notice added by bmcleodcd: 2026-10-18.
+ * This file is part of picoLCD and is distributed under the GNU General
+ * Public License, version 2. See COPYING for the terms and warranty disclaimer.
+ */
 /* OrtekMCE as observed on VRC-1100: 2ms mark, 1ms space, Manchester
  * 16-bit LSB-first payload, checksum = 4 + popcount(low 12 bits).
  * Protocol reference: peterhinch/micropython_ir ir_rx/mce.py (MIT).

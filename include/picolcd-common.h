@@ -1,3 +1,9 @@
+/*
+ * Changes by bmcleodcd: 2026-09-28.
+ * Modification/licence notice added by bmcleodcd: 2026-10-18.
+ * This file is part of picoLCD and is distributed under the GNU General
+ * Public License, version 2. See COPYING for the terms and warranty disclaimer.
+ */
 /* Copyright 2006-2010 iTuner Corporation */
 /* Common routines between picolcd 20x2, 20x4, 256x64 */
 /* npavel@ituner.com */
