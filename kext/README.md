@@ -1,7 +1,15 @@
-# MacOS kexts
+# Historical macOS kext material
 
-These kexts are based on the kexts available at: http://properkernel.com/picolcd/. For more information
-consult the above page.
+These codeless kexts and the original notes target the legacy SDK on Mac OS X,
+including Leopard/Snow Leopard. They were based on material originally hosted
+at `http://properkernel.com/picolcd/`.
 
-To install copy the kext to /System/Library/Extensions, execute touch /System/Library/Extensions and reboot.
-For MacOS Snow Leopard make sure you do chown -R root:wheel /System/Library/Extensions/picoLCD.kext/
+The historical procedure copied the kext into `/System/Library/Extensions`,
+updated that directory's timestamp and rebooted; Snow Leopard also required
+root:wheel ownership. This is an archival description, not a verified procedure
+for current macOS.
+
+The current panel service uses Linux uinput, systemd/D-Bus and Linux/GNU APIs.
+These kexts do not make that service portable to macOS. See the root
+[README](../README.md) and [repository reference](../AGENTS.md) for the
+maintained Linux path.
