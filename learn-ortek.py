@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 """Learn LCD command -> USB HID key sequence while dongle remains connected.
-Run as root on Tinybox. Writes a reviewable map; never installs it.
+Run as root on Linux with panel.service and the Ortek USB receiver.
+Writes a reviewable map; never installs it.
 """
-import glob,json,os,re,selectors,struct,subprocess,time
+import argparse,glob,json,os,re,selectors,struct,subprocess,time
 from collections import deque
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--output',default='learned-ortek.map',help='review map output path (default: %(default)s)')
+args=parser.parse_args()
 keys={1:'Escape',14:'BackSpace',15:'Tab',28:'Return',57:'space',
  71:'KP_7',72:'KP_8',73:'KP_9',74:'KP_Subtract',75:'KP_4',76:'KP_5',77:'KP_6',78:'KP_Add',79:'KP_1',80:'KP_2',81:'KP_3',82:'KP_0',83:'KP_Decimal',96:'KP_Enter',98:'KP_Divide',55:'KP_Multiply',
  102:'Home',103:'Up',104:'Prior',105:'Left',106:'Right',107:'End',108:'Down',109:'Next',110:'Insert',111:'Delete',
@@ -62,7 +66,7 @@ try:
 finally:
  proc.terminate(); proc.wait()
  for f in handles:f.close()
- with open('/home/kodi/ir-signal-test/learned-ortek.map','w') as f:
+ with open(args.output,'w') as f:
   f.write('# Review before installing as /etc/picolcd-ortek.map\n')
   for command,(repeat,seq) in sorted(learned.items()):
    if command not in conflicts:f.write(f'{command} {repeat} {seq}\n')

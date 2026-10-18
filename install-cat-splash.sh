@@ -3,7 +3,7 @@
 set -eu
 cd "$(dirname "$0")"
 if [ "$(id -u)" -ne 0 ]; then
-    echo 'Run: sudo sh /home/kodi/picolcd-review-build/install-cat-splash.sh' >&2
+    echo 'Run: sudo sh ./install-cat-splash.sh' >&2
     exit 1
 fi
 sha256sum -c build/release.sha256

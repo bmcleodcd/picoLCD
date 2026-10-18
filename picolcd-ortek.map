@@ -1,5 +1,5 @@
-# Tinybox VRC-1100: paired LCD OrtekMCE and USB HID capture, 2026-10-18.
-# command repeat-enabled X-key-sequence
+# VRC-1100: paired picoLCD OrtekMCE and USB HID capture, 2026-10-18.
+# command repeat-enabled native-input-key-sequence
 # Digits use ordinary number keys; # sends its intended character directly.
 # Power opens Kodi ShutdownMenu via its S-key shortcut.
 2 0 ctrl+e

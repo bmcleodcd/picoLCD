@@ -105,3 +105,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Versioned Ortek IR key bindings (not a linker map).
+!/picolcd-ortek.map

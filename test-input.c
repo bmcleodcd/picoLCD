@@ -21,7 +21,7 @@ int main(void) {
  count=8;assert(panel_input_parse("numbersign",codes,&count)==0 && count==2 && codes[0]==KEY_LEFTSHIFT && codes[1]==KEY_3);
  const char *bad[]={"","ctrl+","+s","ctrl+ctrl+s","$(touch /tmp/no)","unknown", "ctrl+shift+alt+super+a+b+c+d+e"};
  for(size_t i=0;i<sizeof(bad)/sizeof(bad[0]);i++){count=8;assert(panel_input_parse(bad[i],codes,&count)<0);}
- FILE *f=fopen("tinybox-ortek.map","r");assert(f);char line[256],seq[96];unsigned key;int repeat,maps=0;
+ FILE *f=fopen("picolcd-ortek.map","r");assert(f);char line[256],seq[96];unsigned key;int repeat,maps=0;
  while(fgets(line,sizeof(line),f))if(sscanf(line,"%u %d %95s",&key,&repeat,seq)==3) {
   if(strncmp(seq,"mouse:",6)){count=8;assert(panel_input_parse(seq,codes,&count)==0);}maps++;
  }

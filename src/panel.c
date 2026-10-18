@@ -1,4 +1,4 @@
-/* Minibox panel: bounded display updates, direct NVML and systemd D-Bus. */
+/* Linux 20x2 panel: bounded display updates, direct NVML and systemd D-Bus. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,7 +34,7 @@ static const char *const keymap[KEY_COUNT] = {
     "XF86AudioPlay", "XF86AudioStop", NULL, "Escape",
     "Left", "Right", "Up", "Down", "Return", NULL, NULL, NULL
 };
-/* Configuration lines: decimal IR command, repeat flag (0/1), X key sequence.
+/* Configuration lines: decimal IR command, repeat flag (0/1), native input key sequence.
  * Only codes verified against the local capture are supplied by default. */
 static double monotonic_seconds(void);
 struct ir_binding { char sequence[96]; int repeat; };

@@ -1,7 +1,7 @@
 # picoLCD
 
 Linux driver and SDK for Mini-Box USB LCD displays, with a Kodi/RetroArch panel
-service used on minibox and tinybox. The legacy library includes 20x2, 20x4
+service for Linux media-center systems. The legacy library includes 20x2, 20x4
 and 256x64 drivers; the custom panel behavior targets the 20x2 display.
 
 The panel shows date/media titles, playback status, volume/display changes and

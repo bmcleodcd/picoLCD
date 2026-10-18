@@ -32,9 +32,10 @@ sh build-check.sh                              # expects CPU and NVML GPU sensor
 PANEL_TEST_GPU=unavailable sh build-check.sh    # expects CPU, GPU unavailable
 ```
 
-The second command is for hosts such as tinybox where NVML temperature is
-unavailable; it asserts GPU reads fail. It is not a generic sensor-test bypass.
-Minibox uses the default mode. The script builds a private binary/library in
+The second command is for hosts without usable NVML GPU temperature, such as
+integrated-graphics systems; it asserts GPU reads fail. It is not a generic
+sensor-test bypass. Hosts with working NVML GPU temperature use the default mode.
+The script builds a private binary/library in
 `build/`, runs ASan/UBSan regression tests and real sensor checks, and writes
 `build/release.sha256`. Tests cover input ownership/failure handling, all 46
 Ortek mappings, IR packet splits and capture replay, display overlays, media
@@ -48,9 +49,10 @@ created devices and checks input with an unavailable X server. It requires
 uinput and input-event access. For read-only live display sampling, use:
 
 ```sh
-DISPLAY=:0 XAUTHORITY=/home/kodi/.Xauthority ./build/test-panel --display
+DISPLAY=:0 XAUTHORITY=/path/to/session/.Xauthority ./build/test-panel --display
 ```
 
+Substitute the display and authority file for the active graphical session.
 The diagnostic uses the sibling helper and does not access the LCD or change
 display settings. `ldd build/picolcd` must not show X11, XRandR or libxdo;
 `build-check.sh` enforces this. Autotools configuration is in `configure.in`
@@ -100,7 +102,7 @@ There is no implemented wake-from-off support.
 
 ### Ortek VRC-1100
 
-`tinybox-ortek.map` supplies 46 entries for `/etc/picolcd-ortek.map`. Each line
+`picolcd-ortek.map` supplies 46 entries for `/etc/picolcd-ortek.map`. Each line
 is a decimal command (0-63), repeat flag (0/1), and supported key string or
 `mouse:1`/`mouse:3`. Up (21), Down (32) and Enter (34) are built-in fallbacks.
 Power (3) sends `s` for Kodi's power menu. The USB receiver `05a4:9881` is
@@ -122,10 +124,11 @@ The old threefold X-warp compensation is gone; screen movement follows system
 pointer handling. Stop/gaps reset acceleration; a 200ms watchdog stops motion
 and releases buttons. Dragging is supported. Buttons also release on orderly
 exit, launch and dongle takeover. Active mouse USB reads use 12ms timeouts,
-otherwise 200ms. `learn-ortek.py` is a host-specific three-minute diagnostic
-that correlates LCD journal commands and USB events; it writes
-`/home/kodi/ir-signal-test/learned-ortek.map` without installing it. Review
-results; ambiguous/conflicting pairs are omitted.
+otherwise 200ms. `sudo python3 learn-ortek.py --output /path/to/learned-ortek.map`
+collects three minutes of LCD journal commands and USB events on a Linux host
+with the panel service and Ortek USB receiver. Output defaults to
+`learned-ortek.map` in the working directory; it is never installed automatically.
+Review results; ambiguous/conflicting pairs are omitted.
 
 ### HP TSGH-IR07 (RC6 MCE)
 
@@ -148,7 +151,8 @@ RCA DVD signal: 4ms leader mark/space, 24 MSB-first bits, 500us marks,
 1ms/2ms spaces (one/zero), final mark. A 12-bit address/command is followed
 by its complement; address `0xa` is required. The decoder checks the final
 mark and complement, tolerates observed mark extension, and expires partial
-frames after 300ms. The fixture contains 183 USB packets / 35 frames for
+frames after 300ms. The `test-data/xbox-dvd-capture.log` fixture contains
+183 USB packets / 35 frames for
 Up, Down, Left, Right, Select, Back, Play and Stop; other mappings follow
 the referenced Linux keymap.
 

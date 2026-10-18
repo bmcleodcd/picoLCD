@@ -1,5 +1,5 @@
 #include <assert.h>
-#define ORTEK_MAP_PATH "tinybox-ortek.map"
+#define ORTEK_MAP_PATH "picolcd-ortek.map"
 #include "src/panel.c"
 static unsigned taps,clicks,downs,ups,moves;
 static int move_x,move_y;
