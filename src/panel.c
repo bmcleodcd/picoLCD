@@ -16,7 +16,7 @@
 #include "panel.h"
 #include "media.h"
 #include "picolcd-common.h"
-#include "rc5.h"
+#include "ortek.h"
 
 #define LCD_WIDTH 20
 #define KEY_COUNT 16
@@ -32,6 +32,91 @@ static const char *const keymap[KEY_COUNT] = {
     "XF86AudioPlay", "XF86AudioStop", NULL, "Escape",
     "Left", "Right", "Up", "Down", "Return", NULL, NULL, NULL
 };
+/* Configuration lines: decimal IR command, repeat flag (0/1), X key sequence.
+ * Only codes verified against the local capture are supplied by default. */
+static double monotonic_seconds(void);
+struct ir_binding { char sequence[96]; int repeat; };
+static struct ir_binding ir_bindings[64];
+struct ir_context {
+    xdo_t *x; struct ortek_repeat repeat; int dongle;
+    struct ortek_mouse_state mouse;
+    unsigned mouse_sent;
+};
+static int ortek_dongle_present(void)
+{
+    glob_t paths; int present=0;
+    if(glob("/sys/bus/usb/devices/*/idVendor",0,NULL,&paths)!=0) return 0;
+    for(size_t i=0;i<paths.gl_pathc;i++) {
+        unsigned vendor=0,product=0; char path[512];
+        FILE *f=fopen(paths.gl_pathv[i],"r");
+        if(f) { if(fscanf(f,"%x",&vendor)!=1) vendor=0; fclose(f); }
+        if(vendor!=0x05a4) continue;
+        snprintf(path,sizeof(path),"%.*s/idProduct",(int)(strlen(paths.gl_pathv[i])-9),paths.gl_pathv[i]);
+        f=fopen(path,"r");
+        if(f) { if(fscanf(f,"%x",&product)!=1) product=0; fclose(f); }
+        if(product==0x9881) { present=1; break; }
+    }
+    globfree(&paths); return present;
+}
+#ifndef ORTEK_MAP_PATH
+#define ORTEK_MAP_PATH "/etc/picolcd-ortek.map"
+#endif
+static void ortek_load_map(void)
+{
+    strcpy(ir_bindings[21].sequence,"Up"); ir_bindings[21].repeat=1;
+    strcpy(ir_bindings[32].sequence,"Down"); ir_bindings[32].repeat=1;
+    strcpy(ir_bindings[34].sequence,"Return");
+    FILE *f=fopen(ORTEK_MAP_PATH,"r");
+    if(!f) return;
+    char line[256],sequence[96]; unsigned key; int repeat;
+    while(fgets(line,sizeof(line),f)) {
+        if(sscanf(line,"%u %d %95s",&key,&repeat,sequence)==3 && key<64 && (repeat==0||repeat==1)) {
+            strcpy(ir_bindings[key].sequence,sequence); ir_bindings[key].repeat=repeat;
+        }
+    }
+    fclose(f);
+}
+static void ortek_received(void *opaque,unsigned key,unsigned phase)
+{
+    struct ir_context *ctx=opaque;
+    int emit=ortek_action(&ctx->repeat,key,phase,monotonic_seconds(),ir_bindings[key].repeat);
+    if(phase==0) fprintf(stderr,"Ortek IR command=%u mapping=%s receiver=%s\n",key,
+        ir_bindings[key].sequence[0]?ir_bindings[key].sequence:"unmapped",ctx->dongle?"USB dongle present":"LCD");
+    if(emit && ctx->x && !ctx->dongle && ir_bindings[key].sequence[0]) {
+        const char *sequence=ir_bindings[key].sequence;
+        if(strcmp(sequence,"mouse:1")==0 || strcmp(sequence,"mouse:3")==0)
+            xdo_click_window(ctx->x,CURRENTWINDOW,sequence[6]-'0');
+        else xdo_send_keysequence_window(ctx->x,CURRENTWINDOW,sequence,12000);
+    }
+}
+static void ortek_mouse_release(struct ir_context *ctx)
+{
+    if(ctx->x) for(unsigned bit=0;bit<2;bit++)
+        if(ctx->mouse_sent&(1u<<bit)) xdo_mouse_up(ctx->x,CURRENTWINDOW,bit?3:1);
+    ctx->mouse_sent=0;
+    memset(&ctx->mouse,0,sizeof(ctx->mouse));
+}
+static void ortek_mouse_received(void *opaque,unsigned direction,unsigned buttons)
+{
+    struct ir_context *ctx=opaque;
+    if(direction!=ctx->mouse.direction || buttons!=ctx->mouse.buttons)
+        fprintf(stderr,"Ortek mouse direction=%u buttons=%u receiver=%s\n",direction,buttons,
+                ctx->dongle?"USB dongle present":"LCD");
+    if(ctx->dongle || !ctx->x) return;
+    ortek_mouse_update(&ctx->mouse,direction,buttons,monotonic_seconds());
+}
+static void ortek_mouse_output(struct ir_context *ctx,double now)
+{
+    if(ctx->dongle || !ctx->x) { ortek_mouse_release(ctx);return; }
+    int dx,dy;unsigned buttons;
+    ortek_mouse_step(&ctx->mouse,now,&dx,&dy,&buttons);
+    for(unsigned bit=0;bit<2;bit++) if((buttons^ctx->mouse_sent)&(1u<<bit)) {
+        if(buttons&(1u<<bit)) xdo_mouse_down(ctx->x,CURRENTWINDOW,bit?3:1);
+        else xdo_mouse_up(ctx->x,CURRENTWINDOW,bit?3:1);
+    }
+    ctx->mouse_sent=buttons;
+    if(dx || dy) xdo_move_mouse_relative(ctx->x,dx,dy);
+}
 static volatile sig_atomic_t stopping;
 
 static void stop_panel(int signal_number)
@@ -463,7 +548,10 @@ int panel_run(usblcd_operations *lcd)
     unsigned int physical = 0, sent = 0;
     DBusConnection *bus = NULL;
     DBusPendingCall *pending = NULL;
-    rc5decoder *rc5 = rc5_init();
+    struct ortek_decoder ortek = {0}, mouse_decoder = {0};
+    struct ir_context ir = {0};
+    double next_dongle_check=0;
+    ortek_load_map();
     struct sigaction action = {0};
     int result = 0;
     stopping = 0;
@@ -571,8 +659,13 @@ int panel_run(usblcd_operations *lcd)
                 next_bus = now + 5;
             }
         }
+        if(now>=next_dongle_check) {
+            ir.dongle=ortek_dongle_present(); next_dongle_check=now+1;
+        }
+        ir.x=x;
+        ortek_mouse_output(&ir,now);
         errno = 0;
-        usblcd_event *event = picolcd_read_events_timeout(lcd, 200);
+        usblcd_event *event = picolcd_read_events_timeout(lcd, (ir.mouse.direction || ir.mouse_sent) ? 12 : 200);
         if (!event) {
             if (errno && errno != ETIMEDOUT && errno != EINTR) {
                 fprintf(stderr, "Panel USB read failed: %s\n", strerror(errno));
@@ -590,6 +683,7 @@ int panel_run(usblcd_operations *lcd)
                 /* Close X before systemd stops Kodi's X server. */
                 if (x) {
                     apply_keys(x, &sent, 0);
+                    ortek_mouse_release(&ir);
                     xdo_free(x);
                     x = NULL;
                 }
@@ -597,18 +691,19 @@ int panel_run(usblcd_operations *lcd)
                 if (bus) pending = start_retroarch(bus);
                 else fprintf(stderr, "Cannot start RetroArch: system bus unavailable\n");
             }
-        } else if (event->type == 1 && rc5) {
-            rc5_decode(rc5, event->data, event->length);
+        } else if (event->type == 1) {
+            double received_at=monotonic_seconds();
+            ortek_feed(&ortek,event->data,event->length,received_at,ortek_received,&ir);
+            ortek_mouse_feed(&mouse_decoder,event->data,event->length,received_at,ortek_mouse_received,&ir);
         }
         free(event->data);
         free(event);
     }
-    if (x) { apply_keys(x, &sent, 0); xdo_free(x); }
+    if (x) { ir.x=x; ortek_mouse_release(&ir); apply_keys(x, &sent, 0); xdo_free(x); }
     if (pending) { dbus_pending_call_cancel(pending); dbus_pending_call_unref(pending); }
     if (bus) { dbus_connection_close(bus); dbus_connection_unref(bus); }
     gpu_close(&gpu);
     media_stop(media);
-    if (rc5) rc5_close(rc5);
     if (DISPLAY_STATE_PATH[0]) unlink(DISPLAY_STATE_PATH);
     return result;
 }

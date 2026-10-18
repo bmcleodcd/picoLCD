@@ -1,0 +1,439 @@
+CAPTURE_READY
+1792333638.213071 type=1 bytes=20 a5 fd 86 01 be fd 9f 01 be fd 8e 03 be fd a0 01 a6 fd 87 01
+1792333638.251046 type=1 bytes=14 b2 fb 86 01 be fd 9f 01 be fd 8e 03 be fd
+1792333638.275085 type=1 bytes=20 c6 f7 88 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333638.280085 type=1 bytes=20 bf fd a0 01 a5 fd 86 01 a5 fd 75 03 be fd a0 01 a5 fd 86 01
+1792333638.297081 type=1 bytes=20 cb fb 9f 01 bf fd a0 01 a5 fd 75 03 a5 fd f5 24 e0 f7 a1 01
+1792333638.304084 type=1 bytes=20 a4 fd 86 01 be fd 8e 03 cb fb 8d 03 cb fb 9f 01 be fd 8e 03
+1792333638.311044 type=1 bytes=20 be fd a0 01 b3 fb 75 03 a5 fd 87 01 a5 fd 87 01 b2 fb 85 01
+1792333638.327062 type=1 bytes=20 be fd 8f 03 bf fd 10 25 df f7 a1 01 a4 fd 85 01 be fd 8e 03
+1792333638.334034 type=1 bytes=20 b2 fb 75 03 cb fb 9f 01 be fd 9f 01 a5 fd 86 01 bf fd 8f 03
+1792333638.340059 type=1 bytes=20 be fd a0 01 a5 fd 87 01 cc fb 9f 01 be fd 9f 01 be fd 8e 03
+1792333638.373058 type=1 bytes=2 be fd
+1792333638.397064 type=1 bytes=20 c6 f7 89 01 a6 fd 87 01 a5 fd 75 03 b2 fb 75 03 cb fb 9e 01
+1792333638.403053 type=1 bytes=20 be fd 9f 01 bd fd 9f 01 bf fd 8f 03 a6 fd 87 01 be fd a0 01
+1792333638.440038 type=1 bytes=14 cb fb 9f 01 bf fd 9f 01 be fd 8f 03 bf fd
+1792333638.464048 type=1 bytes=20 c5 f7 87 01 be fd 9f 01 a5 fd 76 03 b2 fb 74 03 b2 fb 86 01
+1792333638.470034 type=1 bytes=20 a5 fd 86 01 be fd 9f 01 a5 fd 75 03 be fd a0 01 a5 fd 86 01
+1792333638.507050 type=1 bytes=14 cb fb 9f 01 a5 fd 86 01 be fd 8e 03 a5 fd
+1792333638.531073 type=1 bytes=20 e0 f7 a1 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333638.537077 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8f 03 bf fd a0 01 be fd a0 01
+1792333638.574087 type=1 bytes=14 cc fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333638.598091 type=1 bytes=20 df f7 a2 01 bf fd 9f 01 be fd 8f 03 cc fb 8e 03 cc fb a0 01
+1792333638.604082 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 be fd a0 01 bf fd a0 01
+1792333638.641095 type=1 bytes=14 cb fb 9f 01 bf fd a0 01 be fd 8e 03 be fd
+1792333638.665093 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333638.670068 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8f 03 bf fd a0 01 be fd a0 01
+1792333638.708063 type=1 bytes=14 cc fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333638.732086 type=1 bytes=20 c8 f7 89 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cb fb 9f 01
+1792333638.737095 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 be fd a0 01 bf fd a1 01
+1792333638.775020 type=1 bytes=14 cc fb 9f 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333638.799081 type=1 bytes=20 df f7 a2 01 be fd 9f 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333638.804081 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8f 03 bf fd a0 01 a5 fd 87 01
+1792333638.842060 type=1 bytes=14 b3 fb 86 01 be fd 9f 01 be fd 8f 03 bf fd
+1792333638.866081 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cb fb 9f 01
+1792333638.871083 type=1 bytes=20 be fd 9f 01 bf fd a0 01 be fd 8e 03 be fd a0 01 be fd 9f 01
+1792333638.908085 type=1 bytes=14 b2 fb 86 01 bf fd a0 01 bf fd 8f 03 be fd
+1792333638.933086 type=1 bytes=20 c7 f7 89 01 bf fd a0 01 bf fd 8f 03 b3 fb 76 03 cc fb 9f 01
+1792333638.938068 type=1 bytes=20 be fd 9f 01 a5 fd 87 01 bf fd 8e 03 be fd a0 01 be fd a0 01
+1792333638.975096 type=1 bytes=14 cc fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333638.999081 type=1 bytes=20 df f7 a1 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333639.005069 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 be fd a0 01 a6 fd 87 01
+1792333639.042071 type=1 bytes=14 cb fb 9f 01 bf fd a0 01 bf fd 8f 03 be fd
+1792333639.066080 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 be fd 8e 03 cc fb 8e 03 cb fb 9f 01
+1792333639.072083 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8e 03 be fd a0 01 be fd a0 01
+1792333639.109066 type=1 bytes=14 cc fb 9f 01 be fd 9f 01 be fd 8f 03 bf fd
+1792333639.133088 type=1 bytes=20 e1 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb a0 01
+1792333639.139100 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 bf fd a1 01 bf fd a0 01
+1792333639.176033 type=1 bytes=14 cc fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333639.200085 type=1 bytes=20 c7 f7 89 01 bf fd a0 01 bf fd 8f 03 cc fb 8e 03 cb fb 9f 01
+1792333639.206075 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8e 03 be fd a0 01 bf fd a1 01
+1792333639.243040 type=1 bytes=14 cc fb 9f 01 be fd 9f 01 be fd 8f 03 bf fd
+1792333639.267086 type=1 bytes=20 df f7 a1 01 bf fd a0 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333639.272043 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 bf fd a0 01 be fd a0 01
+1792333639.310040 type=1 bytes=14 cc fb 9f 01 be fd a0 01 bf fd 8f 03 bf fd
+1792333639.334076 type=1 bytes=20 df f7 a2 01 bf fd 9f 01 be fd 8f 03 cc fb 8e 03 cb fb 9f 01
+1792333639.339045 type=1 bytes=20 bf fd a0 01 bf fd a0 01 be fd 8e 03 be fd a0 01 be fd a0 01
+1792333639.377013 type=1 bytes=14 cc fb 9f 01 be fd 9f 01 be fd 8e 03 be fd
+1792333639.401080 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333639.406042 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8f 03 bf fd a0 01 be fd a0 01
+1792333639.444059 type=1 bytes=14 cc fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333639.468122 type=1 bytes=20 c6 f7 88 01 be fd a0 01 bf fd 8f 03 cc fb 8e 03 cc fb a0 01
+1792333639.473039 type=1 bytes=20 bf fd a0 01 be fd 9f 01 be fd 8e 03 be fd a0 01 bf fd a1 01
+1792333639.490068 type=1 bytes=20 cc fb 9f 01 bf fd a0 01 bf fd 8f 03 bf fd 0b 25 e0 f7 a1 01
+1792333639.497090 type=1 bytes=20 bf fd a0 01 be fd 8e 03 cb fb 8e 03 cb fb 9f 01 be fd 9f 01
+1792333639.503073 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 be fd a0 01 bf fd a0 01 cc fb a0 01
+1792333639.538041 type=1 bytes=10 bf fd a0 01 bf fd 8f 03 be fd
+1792333639.562075 type=1 bytes=20 e0 f7 a2 01 bf fd 9f 01 bf fd 90 03 cc fb 8e 03 cc fb a0 01
+1792333639.568079 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd 8f 03 be fd a0 01 bf fd a1 01
+1792333639.605072 type=1 bytes=14 cd fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd
+1792333639.629071 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cc fb 9f 01
+1792333639.634068 type=1 bytes=20 be fd 9f 01 be fd a0 01 bf fd a0 01 bf fd a0 01 bf fd a0 01
+1792333639.671075 type=1 bytes=10 bf fd 8f 03 cc fb 8f 03 cc fb
+1792333640.200054 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 a5 fd 75 03 b2 fb 75 03 cc fb 9f 01
+1792333640.206048 type=1 bytes=20 be fd 9f 01 a5 fd 87 01 bf fd 8f 03 cc fb 8e 03 be fd a0 01
+1792333640.223023 type=1 bytes=20 bf fd a0 01 be fd a0 01 cc fb 08 27 e0 f7 a1 01 a5 fd 86 01
+1792333640.231143 type=1 bytes=20 be fd 8f 03 cc fb 8e 03 cc fb a0 01 be fd 8e 03 cc fb 8f 03
+1792333640.271052 type=1 bytes=18 cc fb 8e 03 cc fb a0 01 be fd 9f 01 be fd 8e 03 be fd
+1792333640.295046 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a0 01
+1792333640.303046 type=1 bytes=20 be fd 8f 03 cd fb 8f 03 cc fb 8f 03 cc fb a0 01 c0 fd a1 01
+1792333640.337070 type=1 bytes=6 bf fd 8f 03 c0 fd
+1792333640.362065 type=1 bytes=20 c6 f7 89 01 bf fd a0 01 bf fd 8f 03 cc fb 8e 03 cb fb 9f 01
+1792333640.370029 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cb fb 8e 03 cc fb 9f 01 be fd 9f 01
+1792333640.404064 type=1 bytes=6 be fd 8e 03 be fd
+1792333640.428032 type=1 bytes=20 df f7 a1 01 a5 fd 86 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333640.436020 type=1 bytes=20 bf fd 8f 03 cc fb 8e 03 cb fb 8e 03 cc fb a0 01 bf fd a0 01
+1792333640.471060 type=1 bytes=6 a5 fd 75 03 bf fd
+1792333640.495053 type=1 bytes=20 c5 f7 88 01 be fd 9f 01 be fd 8e 03 b2 fb 75 03 cc fb 9f 01
+1792333640.503012 type=1 bytes=20 be fd 8e 03 cb fb 8e 03 cb fb 8e 03 cc fb 9f 01 be fd a0 01
+1792333640.537997 type=1 bytes=6 a6 fd 75 03 be fd
+1792333640.562079 type=1 bytes=20 c6 f7 88 01 be fd 9f 01 bd fd 8e 03 b2 fb 74 03 cb fb 9f 01
+1792333640.569993 type=1 bytes=20 a5 fd 75 03 b3 fb 76 03 cc fb 8e 03 cb fb 9f 01 a5 fd 86 01
+1792333640.605032 type=1 bytes=6 be fd 8e 03 be fd
+1792333640.629026 type=1 bytes=20 df f7 a1 01 bf fd a0 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333640.636977 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cc fb 8e 03 cc fb a0 01 bf fd a0 01
+1792333640.672049 type=1 bytes=6 bf fd 8f 03 bf fd
+1792333640.696049 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 bf fd 8f 03 cb fb 8e 03 cc fb 9f 01
+1792333640.704019 type=1 bytes=20 be fd 8e 03 cb fb 8e 03 cb fb 8e 03 cc fb 9f 01 be fd 9f 01
+1792333640.739072 type=1 bytes=6 be fd 8f 03 bf fd
+1792333640.763052 type=1 bytes=20 c6 f7 89 01 bf fd a0 01 bf fd 8f 03 b3 fb 75 03 cb fb 9f 01
+1792333640.770999 type=1 bytes=20 be fd 8e 03 cb fb 8e 03 cc fb 8e 03 cb fb 9f 01 be fd 9f 01
+1792333640.806021 type=1 bytes=6 be fd 8e 03 be fd
+1792333640.830023 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 bf fd 8f 03 cb fb 8e 03 cc fb a0 01
+1792333640.837986 type=1 bytes=20 bf fd 8f 03 cc fb 8e 03 cb fb 8e 03 cc fb a0 01 bf fd a0 01
+1792333640.873023 type=1 bytes=6 a6 fd 76 03 bf fd
+1792333640.897021 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 be fd 8e 03 cb fb 8e 03 cc fb 9f 01
+1792333640.904985 type=1 bytes=20 be fd 8f 03 cc fb 8e 03 cc fb 8f 03 cd fb a0 01 be fd 9f 01
+1792333640.939018 type=1 bytes=6 be fd 8f 03 bf fd
+1792333640.964051 type=1 bytes=20 e0 f7 a3 01 bf fd a0 01 bf fd 8f 03 cd fb 8f 03 cc fb a0 01
+1792333640.971995 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cc fb 8f 03 cc fb 9f 01 bf fd a0 01
+1792333641.006047 type=1 bytes=6 be fd 8e 03 bf fd
+1792333641.031054 type=1 bytes=20 de f7 a1 01 bf fd a0 01 be fd 8e 03 cc fb 8f 03 cc fb a0 01
+1792333641.038016 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cc fb 8e 03 cc fb a0 01 bf fd a0 01
+1792333641.073045 type=1 bytes=6 bf fd 8f 03 bf fd
+1792333641.097042 type=1 bytes=20 df f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333641.105006 type=1 bytes=20 be fd 8e 03 cc fb 8f 03 cc fb 8f 03 cc fb 9f 01 be fd 9f 01
+1792333641.140044 type=1 bytes=6 be fd 8f 03 bf fd
+1792333641.164043 type=1 bytes=20 e0 f7 a2 01 bf fd 9f 01 be fd 8f 03 cc fb 8e 03 cb fb 9f 01
+1792333641.172033 type=1 bytes=20 be fd 8e 03 cc fb 8f 03 cb fb 8e 03 cd fb a0 01 be fd 9f 01
+1792333641.207040 type=1 bytes=6 bf fd 8f 03 be fd
+1792333641.231049 type=1 bytes=20 e0 f7 a3 01 bf fd 9f 01 be fd 8f 03 cc fb 8e 03 cc fb a0 01
+1792333641.236039 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 be fd 9f 01 be fd 9f 01
+1792333641.273042 type=1 bytes=10 bf fd 8f 03 cb fb 8e 03 cc fb
+1792333642.399011 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cc fb a0 01
+1792333642.404016 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd 8f 03
+1792333642.421963 type=1 bytes=20 cc fb 8f 03 bf fd a0 01 cc fb 06 27 e0 f7 a2 01 bf fd a0 01
+1792333642.430011 type=1 bytes=20 bf fd 8f 03 cc fb 8e 03 cc fb a0 01 bf fd 8f 03 cc fb a0 01
+1792333642.435009 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 bf fd a1 01 c0 fd a1 01 bf fd a1 01
+1792333642.469010 type=1 bytes=2 cd fb
+1792333642.493022 type=1 bytes=20 df f7 a1 01 be fd 9f 01 be fd 8f 03 cd fb 8f 03 cc fb a0 01
+1792333642.500021 type=1 bytes=20 bf fd 8f 03 cc fb 9f 01 be fd a0 01 bf fd 8f 03 bf fd a0 01
+1792333642.535996 type=1 bytes=10 be fd a0 01 bf fd a0 01 cb fb
+1792333642.560022 type=1 bytes=20 c6 f7 88 01 be fd 9f 01 be fd 8e 03 cb fb 8e 03 cb fb 9f 01
+1792333642.567017 type=1 bytes=20 bf fd 8f 03 cc fb 9f 01 be fd 9f 01 be fd 8e 03 be fd a0 01
+1792333642.583014 type=1 bytes=20 be fd a0 01 bf fd a0 01 cb fb f9 26 e0 f7 a2 01 bf fd a0 01
+1792333642.590014 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01 be fd 9f 01 bf fd a0 01
+1792333642.597012 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 8f 03 cd fb 8f 03 be fd a0 01
+1792333642.631015 type=1 bytes=2 cc fb
+1792333642.655018 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a1 01
+1792333642.661016 type=1 bytes=20 c0 fd a1 01 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd 8f 03
+1792333642.697016 type=1 bytes=10 cc fb 8f 03 bf fd a0 01 cc fb
+1792333642.722023 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb a0 01
+1792333642.728016 type=1 bytes=20 c0 fd a1 01 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd 8f 03
+1792333642.764015 type=1 bytes=10 cc fb 8f 03 bf fd a1 01 cd fb
+1792333642.789014 type=1 bytes=20 df f7 a2 01 c0 fd a1 01 bf fd 8f 03 cc fb 8e 03 cc fb a0 01
+1792333642.794009 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 be fd 9f 01 bf fd 8f 03
+1792333642.831012 type=1 bytes=10 cc fb 8f 03 bf fd a1 01 cc fb
+1792333642.856010 type=1 bytes=20 e0 f7 a2 01 a6 fd 87 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333642.861010 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 9f 01 be fd a0 01 bf fd 8f 03
+1792333642.898020 type=1 bytes=10 cc fb 8e 03 be fd a0 01 cc fb
+1792333642.922985 type=1 bytes=20 e0 f7 a2 01 be fd 9f 01 be fd 8e 03 cc fb 8f 03 cc fb a0 01
+1792333642.927981 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 be fd 9f 01 be fd 8e 03
+1792333642.965017 type=1 bytes=10 cc fb 8f 03 bf fd a0 01 cb fb
+1792333642.989980 type=1 bytes=20 c6 f7 88 01 be fd a0 01 bf fd 8f 03 cc fb 8e 03 cb fb 9f 01
+1792333642.994986 type=1 bytes=20 a5 fd 86 01 bf fd a0 01 be fd 9f 01 bf fd a0 01 bf fd 8f 03
+1792333643.032016 type=1 bytes=10 cc fb 8f 03 bf fd a1 01 cc fb
+1792333643.056013 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb 9f 01
+1792333643.062012 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 9f 01 be fd 9f 01 be fd 8f 03
+1792333643.099020 type=1 bytes=10 cc fb 8e 03 be fd a0 01 cc fb
+1792333643.123009 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb a0 01
+1792333643.129003 type=1 bytes=20 bf fd a0 01 bf fd a0 01 c0 fd a1 01 bf fd a0 01 c0 fd 90 03
+1792333643.165981 type=1 bytes=10 cc fb 8f 03 bf fd a0 01 cc fb
+1792333643.190007 type=1 bytes=20 e1 f7 a2 01 be fd 9f 01 a5 fd 76 03 cc fb 8e 03 cc fb a0 01
+1792333643.196000 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd 8f 03
+1792333643.232059 type=1 bytes=10 cc fb 8f 03 bf fd a1 01 cd fb
+1792333643.256982 type=1 bytes=20 df f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 b3 fb 86 01
+1792333643.263004 type=1 bytes=20 be fd 9f 01 be fd 9f 01 be fd 9f 01 be fd 9f 01 be fd 8f 03
+1792333643.298978 type=1 bytes=10 cd fb 8f 03 be fd a0 01 cc fb
+1792333643.324012 type=1 bytes=20 e0 f7 a3 01 bf fd a0 01 bf fd 8f 03 cd fb 90 03 cd fb a0 01
+1792333643.329004 type=1 bytes=20 bf fd a0 01 bf fd a0 01 be fd a0 01 bf fd a0 01 c0 fd a1 01
+1792333643.365984 type=1 bytes=10 c0 fd 90 03 cd fb 8f 03 cc fb
+1792333644.106980 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c0 fd 90 03 ce fb 91 03 ce fb a1 01
+1792333644.111981 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 91 03 c1 fd a2 01
+1792333644.148978 type=1 bytes=14 c0 fd a2 01 c1 fd a2 01 c0 fd a2 01 ce fb
+1792333644.173981 type=1 bytes=20 e2 f7 a4 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333644.178980 type=1 bytes=20 c0 fd a2 01 c1 fd a1 01 c0 fd a1 01 c0 fd 91 03 c1 fd a2 01
+1792333644.215988 type=1 bytes=14 c0 fd a2 01 c0 fd a2 01 c1 fd a2 01 ce fb
+1792333644.240957 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333644.245975 type=1 bytes=20 c0 fd a1 01 c1 fd a2 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333644.262987 type=1 bytes=20 c1 fd a2 01 c0 fd a2 01 c1 fd a2 01 cd fb 4e 27 e1 f7 a3 01
+1792333644.269984 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01 bf fd a1 01
+1792333644.274985 type=1 bytes=20 c0 fd a1 01 c0 fd a0 01 c0 fd 91 03 c0 fd a1 01 bf fd a1 01
+1792333644.310960 type=1 bytes=10 c0 fd a2 01 c0 fd a1 01 cd fb
+1792333644.335971 type=1 bytes=20 e1 f7 a4 01 c0 fd a0 01 bf fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333644.340965 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 bf fd a1 01
+1792333644.377945 type=1 bytes=14 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01 cd fb
+1792333644.402003 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333644.407956 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 bf fd a1 01
+1792333644.444965 type=1 bytes=14 c0 fd a1 01 c0 fd a2 01 c0 fd a2 01 ce fb
+1792333644.468988 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 b4 fb 87 01
+1792333644.474985 type=1 bytes=20 c0 fd a1 01 bf fd a0 01 bf fd a1 01 c0 fd 90 03 c0 fd a1 01
+1792333644.511933 type=1 bytes=14 bf fd a1 01 c0 fd a1 01 bf fd a1 01 cd fb
+1792333644.536000 type=1 bytes=20 e1 f7 a4 01 c1 fd a2 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333644.541984 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 bf fd a1 01
+1792333644.577965 type=1 bytes=14 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01 cd fb
+1792333644.602986 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333644.608974 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333644.644938 type=1 bytes=14 c1 fd a3 01 c1 fd a2 01 c0 fd a1 01 cd fb
+1792333644.669935 type=1 bytes=20 e2 f7 a4 01 c0 fd a1 01 c0 fd 90 03 ce fb 91 03 ce fb a1 01
+1792333644.674979 type=1 bytes=20 c0 fd a2 01 c1 fd a2 01 c1 fd a2 01 c1 fd 91 03 c1 fd a2 01
+1792333644.711949 type=1 bytes=14 c0 fd a2 01 c0 fd a2 01 c1 fd a2 01 ce fb
+1792333644.736950 type=1 bytes=20 e1 f7 a4 01 c0 fd a1 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333644.741985 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333644.778952 type=1 bytes=14 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01 cd fb
+1792333644.803950 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a1 01
+1792333644.808948 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333644.845951 type=1 bytes=14 c0 fd a1 01 bf fd a1 01 c0 fd a2 01 cd fb
+1792333644.870946 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333644.875954 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a1 01
+1792333644.912944 type=1 bytes=14 bf fd a1 01 c0 fd a2 01 c0 fd a1 01 cd fb
+1792333644.937961 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333644.942974 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 bf fd a0 01 bf fd 8f 03 bf fd a1 01
+1792333644.979976 type=1 bytes=14 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01 cd fb
+1792333645.003951 type=1 bytes=20 e1 f7 a4 01 c0 fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a1 01
+1792333645.009936 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 bf fd 8f 03 bf fd a1 01
+1792333645.046973 type=1 bytes=14 c0 fd a1 01 bf fd a1 01 c0 fd a2 01 cd fb
+1792333645.070976 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cc fb 8f 03 cd fb a1 01
+1792333645.076916 type=1 bytes=20 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333645.113948 type=1 bytes=14 c0 fd a1 01 c0 fd a2 01 c0 fd a1 01 cc fb
+1792333645.137978 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333645.143928 type=1 bytes=20 bf fd a0 01 c0 fd a1 01 bf fd a0 01 bf fd 90 03 c0 fd a1 01
+1792333645.179973 type=1 bytes=14 bf fd a1 01 c0 fd a1 01 bf fd a1 01 cd fb
+1792333645.204978 type=1 bytes=20 e1 f7 a4 01 c1 fd a2 01 c1 fd 91 03 cd fb 8f 03 cd fb a1 01
+1792333645.209965 type=1 bytes=20 c1 fd a2 01 c0 fd a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333645.246967 type=1 bytes=14 c0 fd a2 01 c1 fd a2 01 c0 fd a2 01 ce fb
+1792333645.271954 type=1 bytes=20 e2 f7 a4 01 c0 fd a0 01 bf fd 90 03 ce fb 90 03 cd fb a1 01
+1792333645.276956 type=1 bytes=20 a7 fd 88 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333645.313955 type=1 bytes=10 bf fd 8f 03 cd fb 90 03 cd fb
+1792333646.284945 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 90 03 cd fb 8f 03 cc fb a0 01
+1792333646.289941 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 bf fd a1 01 c0 fd a1 01 bf fd a1 01
+1792333646.327943 type=1 bytes=14 bf fd a0 01 cc fb a0 01 bf fd 8f 03 bf fd
+1792333646.351942 type=1 bytes=20 e0 f7 a3 01 bf fd a0 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333646.356913 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 bf fd a1 01 bf fd a1 01 c0 fd a1 01
+1792333646.373958 type=1 bytes=20 bf fd a1 01 cd fb a0 01 bf fd 8f 03 bf fd 10 25 e0 f7 a2 01
+1792333646.380928 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 cd fb 90 03 cd fb a0 01 bf fd 90 03
+1792333646.387945 type=1 bytes=20 cd fb 8f 03 bf fd a1 01 c0 fd a2 01 c0 fd a1 01 cd fb a1 01
+1792333646.421960 type=1 bytes=6 c0 fd 90 03 c0 fd
+1792333646.446928 type=1 bytes=20 e1 f7 a3 01 bf fd a0 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333646.452934 type=1 bytes=20 bf fd 90 03 cd fb 8f 03 bf fd a1 01 c0 fd a2 01 c0 fd a1 01
+1792333646.488941 type=1 bytes=10 cd fb a1 01 c0 fd 90 03 c0 fd
+1792333646.512921 type=1 bytes=20 e1 f7 a3 01 bf fd a1 01 c0 fd 90 03 ce fb 90 03 cd fb a1 01
+1792333646.519941 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 c0 fd a1 01 c0 fd a2 01 c0 fd a1 01
+1792333646.535948 type=1 bytes=20 cd fb a1 01 c0 fd 90 03 c0 fd 16 25 e2 f7 a3 01 c0 fd a1 01
+1792333646.543896 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 cd fb a1 01 c0 fd a1 01 c1 fd 91 03
+1792333646.548943 type=1 bytes=20 c0 fd a1 01 c0 fd a2 01 c0 fd a2 01 c0 fd a1 01 cd fb a1 01
+1792333646.583916 type=1 bytes=6 c0 fd 90 03 c0 fd
+1792333646.607951 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333646.613919 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01
+1792333646.650945 type=1 bytes=14 c0 fd a2 01 cd fb a0 01 c0 fd 90 03 c0 fd
+1792333646.674920 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333646.680942 type=1 bytes=20 c0 fd a1 01 bf fd 90 03 c0 fd a1 01 c0 fd a2 01 c0 fd a2 01
+1792333646.717944 type=1 bytes=14 c0 fd a1 01 cd fb a1 01 c0 fd 90 03 c0 fd
+1792333646.741954 type=1 bytes=20 e0 f7 a2 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333646.747909 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 c0 fd a1 01 c0 fd a2 01
+1792333646.784861 type=1 bytes=14 c0 fd a2 01 cd fb a0 01 c0 fd 90 03 c0 fd
+1792333646.808919 type=1 bytes=20 e0 f7 a3 01 c1 fd a2 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333646.813912 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 bf fd a1 01 c0 fd a2 01 c0 fd a1 01
+1792333646.851942 type=1 bytes=14 c0 fd a2 01 ce fb a2 01 c1 fd 91 03 c0 fd
+1792333646.875948 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333646.880937 type=1 bytes=20 c0 fd a1 01 c1 fd 91 03 c0 fd a1 01 bf fd a1 01 c0 fd a2 01
+1792333646.918948 type=1 bytes=14 c0 fd a1 01 cd fb a1 01 c0 fd 90 03 c0 fd
+1792333646.942850 type=1 bytes=20 e1 f7 a4 01 c0 fd a1 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333646.947879 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 bf fd a1 01 c0 fd a1 01 bf fd a1 01
+1792333646.984890 type=1 bytes=14 c0 fd a2 01 ce fb a1 01 c0 fd 91 03 c0 fd
+1792333647.009883 type=1 bytes=20 df f7 a2 01 bf fd a0 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333647.014903 type=1 bytes=20 bf fd a1 01 c0 fd 90 03 c0 fd a1 01 c0 fd a2 01 bf fd a0 01
+1792333647.031905 type=1 bytes=20 bf fd a1 01 cd fb a1 01 c0 fd 90 03 c0 fd 0a 25 e1 f7 a3 01
+1792333647.038901 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01 c0 fd a1 01
+1792333647.043903 type=1 bytes=20 bf fd 90 03 c0 fd a1 01 bf fd a1 01 c0 fd a1 01 bf fd a1 01
+1792333647.079907 type=1 bytes=10 cd fb a1 01 c1 fd 91 03 c0 fd
+1792333647.103952 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333647.109949 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 c0 fd a2 01 c0 fd a1 01
+1792333647.146936 type=1 bytes=14 bf fd a1 01 cd fb a0 01 c0 fd 90 03 bf fd
+1792333647.170947 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a1 01
+1792333647.175934 type=1 bytes=20 bf fd a0 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333647.213907 type=1 bytes=10 c0 fd 90 03 cd fb 90 03 cd fb
+1792333647.628919 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 be fd 8e 03 cc fb 8f 03 cd fb a0 01
+1792333647.635916 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 cc fb a0 01 bf fd 8f 03 bf fd a1 01
+1792333647.670921 type=1 bytes=10 bf fd a1 01 c0 fd a1 01 cc fb
+1792333647.695916 type=1 bytes=20 e0 f7 a2 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cc fb a0 01
+1792333647.701917 type=1 bytes=20 c0 fd a1 01 bf fd 8f 03 cc fb 9f 01 bf fd 8f 03 be fd a0 01
+1792333647.737919 type=1 bytes=10 bf fd a1 01 c0 fd a1 01 cc fb
+1792333647.762935 type=1 bytes=20 df f7 a2 01 bf fd a0 01 bf fd 8f 03 cd fb 8f 03 cc fb a0 01
+1792333647.768923 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 cc fb a0 01 bf fd 8f 03 bf fd a1 01
+1792333647.785920 type=1 bytes=20 bf fd a0 01 bf fd a1 01 cd fb 06 27 e0 f7 a2 01 bf fd a0 01
+1792333647.793923 type=1 bytes=20 bf fd 8f 03 cc fb 8f 03 cc fb a0 01 bf fd 8f 03 cd fb a0 01
+1792333647.798920 type=1 bytes=20 bf fd a0 01 bf fd 8f 03 bf fd a1 01 bf fd a1 01 bf fd a1 01
+1792333647.832941 type=1 bytes=2 cd fb
+1792333647.857908 type=1 bytes=20 e0 f7 a3 01 bf fd a0 01 bf fd 8f 03 cd fb 90 03 cd fb a0 01
+1792333647.863900 type=1 bytes=20 bf fd 90 03 cd fb a0 01 bf fd a0 01 bf fd 8f 03 bf fd a1 01
+1792333647.899906 type=1 bytes=10 c0 fd a2 01 a6 fd 87 01 cc fb
+1792333647.924925 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333647.930923 type=1 bytes=20 bf fd 90 03 cd fb a0 01 c0 fd a1 01 c0 fd 90 03 bf fd a1 01
+1792333647.966935 type=1 bytes=10 c0 fd a1 01 bf fd a1 01 cd fb
+1792333647.991929 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333647.997914 type=1 bytes=20 c0 fd 90 03 cd fb a1 01 c0 fd a1 01 c0 fd 90 03 bf fd a1 01
+1792333648.014919 type=1 bytes=20 c0 fd a1 01 bf fd a1 01 cd fb 09 27 e1 f7 a4 01 c0 fd a1 01
+1792333648.021923 type=1 bytes=20 c0 fd 90 03 cd fb 8f 03 cc fb a0 01 bf fd a0 01 c0 fd 90 03
+1792333648.027915 type=1 bytes=20 cd fb a1 01 bf fd 8f 03 bf fd a1 01 c0 fd a1 01 bf fd a1 01
+1792333648.061924 type=1 bytes=2 cd fb
+1792333648.085922 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333648.092918 type=1 bytes=20 bf fd a0 01 c0 fd 90 03 cd fb a1 01 c0 fd 90 03 bf fd a1 01
+1792333648.128921 type=1 bytes=10 c0 fd a1 01 bf fd a1 01 cd fb
+1792333648.152895 type=1 bytes=20 e1 f7 a3 01 bf fd a0 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333648.159903 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 cd fb a0 01 bf fd 8f 03 bf fd a1 01
+1792333648.195922 type=1 bytes=10 c0 fd a2 01 c0 fd a1 01 cd fb
+1792333648.219917 type=1 bytes=20 e1 f7 a4 01 c0 fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb a1 01
+1792333648.226912 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 cd fb a1 01 c0 fd 90 03 c0 fd a1 01
+1792333648.242942 type=1 bytes=20 bf fd a1 01 c0 fd a2 01 cd fb 53 27 e1 f7 a3 01 c0 fd a1 01
+1792333648.250907 type=1 bytes=20 bf fd 8f 03 cd fb 90 03 cd fb a1 01 c0 fd a1 01 c0 fd 90 03
+1792333648.256915 type=1 bytes=20 cd fb a1 01 c0 fd 90 03 c0 fd a1 01 bf fd a1 01 c0 fd a2 01
+1792333648.289929 type=1 bytes=2 ce fb
+1792333648.314917 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333648.321917 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 ce fb a1 01 c0 fd 90 03 bf fd a1 01
+1792333648.356918 type=1 bytes=10 c0 fd a2 01 c0 fd a1 01 cd fb
+1792333648.381916 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333648.386913 type=1 bytes=20 c0 fd a0 01 bf fd a1 01 c0 fd a1 01 a7 fd 88 01 c0 fd a1 01
+1792333648.424019 type=1 bytes=10 c0 fd 90 03 ce fb 91 03 ce fb
+1792333649.069896 type=1 bytes=20 e1 f7 a4 01 c0 fd a1 01 c0 fd 90 03 ce fb 91 03 ce fb a1 01
+1792333649.076891 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 cd fb 8f 03 cd fb a1 01
+1792333649.111892 type=1 bytes=10 c0 fd a1 01 c0 fd 90 03 c0 fd
+1792333649.135895 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333649.142893 type=1 bytes=20 c0 fd a1 01 c1 fd 91 03 c0 fd a1 01 cd fb 90 03 cd fb a0 01
+1792333649.178884 type=1 bytes=10 bf fd a1 01 c1 fd 91 03 c1 fd
+1792333649.202905 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333649.209908 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 bf fd a1 01 ce fb 91 03 cd fb a0 01
+1792333649.225895 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd 1b 25 e2 f7 a4 01 c0 fd a1 01
+1792333649.234884 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 cd fb a0 01 c0 fd 91 03 ce fb 90 03
+1792333649.273884 type=1 bytes=18 cd fb 90 03 ce fb a1 01 c0 fd a2 01 c0 fd 90 03 c0 fd
+1792333649.297872 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a2 01
+1792333649.305849 type=1 bytes=20 c1 fd 91 03 cd fb 90 03 ce fb 90 03 ce fb a2 01 c0 fd a1 01
+1792333649.340880 type=1 bytes=6 c1 fd 91 03 c1 fd
+1792333649.364876 type=1 bytes=20 e2 f7 a4 01 c0 fd a1 01 c1 fd 91 03 cd fb 8f 03 cd fb a1 01
+1792333649.372817 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 ce fb 91 03 ce fb a1 01 c0 fd a1 01
+1792333649.407878 type=1 bytes=6 c0 fd 90 03 c0 fd
+1792333649.431922 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333649.439893 type=1 bytes=20 c0 fd 90 03 cd fb 8f 03 cd fb 90 03 cd fb a1 01 c0 fd a1 01
+1792333649.474857 type=1 bytes=6 c0 fd 90 03 c1 fd
+1792333649.498886 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c0 fd 90 03 ce fb 91 03 ce fb a1 01
+1792333649.506834 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 ce fb 91 03 ce fb a1 01 c0 fd a1 01
+1792333649.541895 type=1 bytes=6 c0 fd 91 03 c1 fd
+1792333649.565869 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a1 01
+1792333649.573896 type=1 bytes=20 c1 fd 91 03 ce fb 91 03 ce fb 90 03 cd fb a1 01 c0 fd a1 01
+1792333649.608873 type=1 bytes=6 c1 fd 91 03 c0 fd
+1792333649.632911 type=1 bytes=20 e2 f7 a4 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333649.640863 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 cd fb 90 03 cd fb a0 01 c0 fd a1 01
+1792333649.674898 type=1 bytes=6 c0 fd 90 03 c0 fd
+1792333649.699898 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 91 03 cd fb 8f 03 cd fb a1 01
+1792333649.707858 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 ce fb 90 03 cd fb a1 01 c0 fd a1 01
+1792333649.741892 type=1 bytes=6 c0 fd 90 03 c0 fd
+1792333649.765903 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb a0 01
+1792333649.773871 type=1 bytes=20 c0 fd 91 03 ce fb 90 03 cd fb 90 03 ce fb a2 01 c0 fd a1 01
+1792333649.790892 type=1 bytes=20 c1 fd 91 03 c1 fd 15 25 e2 f7 a4 01 c0 fd a1 01 c0 fd 90 03
+1792333649.797890 type=1 bytes=20 cd fb 8f 03 cd fb a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01
+1792333649.836909 type=1 bytes=18 ce fb 91 03 ce fb a1 01 c0 fd a1 01 c0 fd 90 03 c0 fd
+1792333649.860893 type=1 bytes=20 e1 f7 a3 01 bf fd a1 01 c0 fd 90 03 cd fb 8f 03 cd fb a1 01
+1792333649.867889 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 ce fb 90 03 cd fb a1 01
+1792333649.903922 type=1 bytes=10 c1 fd a2 01 c0 fd 90 03 c0 fd
+1792333649.927888 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb a1 01
+1792333649.932886 type=1 bytes=20 c0 fd a2 01 c1 fd a2 01 c1 fd a2 01 c1 fd a2 01 c0 fd a1 01
+1792333649.969898 type=1 bytes=10 c0 fd 90 03 ce fb 91 03 ce fb
+1792333650.698825 type=1 bytes=20 e1 f7 a4 01 c1 fd a1 01 c0 fd 91 03 ce fb 90 03 ce fb a2 01
+1792333650.705837 type=1 bytes=20 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 c1 fd a2 01 ce fb a2 01
+1792333650.741869 type=1 bytes=10 c1 fd a2 01 c1 fd 91 03 c0 fd
+1792333650.765838 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 cd fb 90 03 ce fb a1 01
+1792333650.772836 type=1 bytes=20 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 c1 fd a3 01 ce fb a1 01
+1792333650.807861 type=1 bytes=10 c0 fd a1 01 c0 fd 90 03 c0 fd
+1792333650.832876 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 ce fb 91 03 ce fb a2 01
+1792333650.839869 type=1 bytes=20 c1 fd a2 01 c1 fd 91 03 ce fb 90 03 c0 fd a2 01 ce fb a2 01
+1792333650.855870 type=1 bytes=20 c1 fd a2 01 c1 fd 91 03 c1 fd 0f 25 e2 f7 a4 01 c0 fd a1 01
+1792333650.863844 type=1 bytes=20 c0 fd 90 03 cd fb 90 03 ce fb a2 01 c1 fd 91 03 ce fb a1 01
+1792333650.869865 type=1 bytes=20 c0 fd 90 03 c0 fd a2 01 ce fb a2 01 c1 fd a2 01 c1 fd 91 03
+1792333650.902832 type=1 bytes=2 c1 fd
+1792333650.926847 type=1 bytes=20 e1 f7 a4 01 c0 fd a1 01 c1 fd 91 03 ce fb 91 03 ce fb a2 01
+1792333650.933851 type=1 bytes=20 c2 fd 92 03 ce fb a1 01 c1 fd 91 03 c0 fd a2 01 ce fb a2 01
+1792333650.969843 type=1 bytes=10 c1 fd a2 01 c1 fd 91 03 c1 fd
+1792333650.993850 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 ce fb a1 01
+1792333651.000848 type=1 bytes=20 c0 fd 90 03 ce fb a2 01 c1 fd 91 03 c0 fd a2 01 ce fb a1 01
+1792333651.036843 type=1 bytes=10 c0 fd a2 01 c1 fd 91 03 c1 fd
+1792333651.060843 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 ce fb a1 01
+1792333651.067840 type=1 bytes=20 c1 fd 92 03 ce fb a1 01 c1 fd 91 03 c0 fd a2 01 ce fb a1 01
+1792333651.103845 type=1 bytes=10 c1 fd a3 01 c1 fd 91 03 c2 fd
+1792333651.127848 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 ce fb a1 01
+1792333651.134849 type=1 bytes=20 c0 fd 91 03 cf fb a2 01 c0 fd 90 03 c1 fd a3 01 ce fb a1 01
+1792333651.170835 type=1 bytes=10 c1 fd a2 01 c0 fd 90 03 c0 fd
+1792333651.194844 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 cf fb a2 01
+1792333651.201867 type=1 bytes=20 c0 fd 90 03 ce fb a2 01 c1 fd 91 03 c0 fd a2 01 ce fb a1 01
+1792333651.237863 type=1 bytes=10 c1 fd a2 01 c0 fd 90 03 c0 fd
+1792333651.261890 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 ce fb a1 01
+1792333651.268837 type=1 bytes=20 c1 fd 91 03 ce fb a2 01 c1 fd 91 03 c1 fd a3 01 ce fb a1 01
+1792333651.304816 type=1 bytes=10 c1 fd a2 01 c0 fd 90 03 c1 fd
+1792333651.328871 type=1 bytes=20 e1 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 cf fb a2 01
+1792333651.335875 type=1 bytes=20 c1 fd 91 03 ce fb a2 01 c1 fd 91 03 c0 fd a2 01 ce fb a1 01
+1792333651.351871 type=1 bytes=20 c0 fd a1 01 c1 fd 91 03 c1 fd 0d 25 e2 f7 a5 01 c1 fd a2 01
+1792333651.358869 type=1 bytes=20 c1 fd 91 03 cf fb 91 03 ce fb a2 01 c1 fd a2 01 c1 fd 91 03
+1792333651.365867 type=1 bytes=20 cd fb 90 03 c1 fd a2 01 cd fb a1 01 c1 fd a2 01 c1 fd 91 03
+1792333651.398870 type=1 bytes=2 c1 fd
+1792333651.423862 type=1 bytes=20 e3 f7 a4 01 c0 fd a1 01 c0 fd 91 03 ce fb 90 03 ce fb a2 01
+1792333651.430872 type=1 bytes=20 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 c1 fd a2 01 cd fb a1 01
+1792333651.465867 type=1 bytes=10 c1 fd a2 01 c1 fd 91 03 c1 fd
+1792333651.489833 type=1 bytes=20 e2 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 91 03 cf fb a2 01
+1792333651.494828 type=1 bytes=20 c1 fd a2 01 c1 fd a2 01 c0 fd a1 01 c1 fd a3 01 c1 fd a2 01
+1792333651.532861 type=1 bytes=10 c1 fd 91 03 ce fb 90 03 ce fb
+1792333652.534837 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 c0 fd a2 01
+1792333652.540830 type=1 bytes=20 ce fb a1 01 c0 fd a1 01 c0 fd a2 01 c1 fd a1 01 c0 fd a1 01
+1792333652.577832 type=1 bytes=14 bf fd a0 01 bf fd 90 03 c0 fd a1 01 cd fb
+1792333652.601838 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 c0 fd a2 01
+1792333652.607830 type=1 bytes=20 ce fb a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333652.644815 type=1 bytes=14 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 cd fb
+1792333652.668845 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 c0 fd a2 01
+1792333652.674836 type=1 bytes=20 ce fb a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333652.711848 type=1 bytes=14 c0 fd a2 01 c0 fd 90 03 c0 fd a1 01 cd fb
+1792333652.735845 type=1 bytes=20 e1 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 90 03 c0 fd a2 01
+1792333652.741841 type=1 bytes=20 ce fb a2 01 c1 fd a1 01 c0 fd a2 01 c0 fd a1 01 c1 fd a2 01
+1792333652.778828 type=1 bytes=14 c0 fd a1 01 c1 fd 91 03 c0 fd a2 01 ce fb
+1792333652.802837 type=1 bytes=20 e1 f7 a4 01 c1 fd a2 01 c1 fd 91 03 ce fb 90 03 c0 fd a2 01
+1792333652.807826 type=1 bytes=20 cd fb a1 01 c1 fd a2 01 c1 fd a2 01 c0 fd a1 01 c1 fd a2 01
+1792333652.845831 type=1 bytes=14 c0 fd a1 01 c0 fd 90 03 c0 fd a2 01 ce fb
+1792333652.869826 type=1 bytes=20 e0 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cc fb 8f 03 cd fb a0 01
+1792333652.874825 type=1 bytes=20 c0 fd a1 01 bf fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333652.912772 type=1 bytes=10 c0 fd 90 03 cd fb 8f 03 cd fb
+1792333653.915813 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 ce fb 90 03
+1792333653.920808 type=1 bytes=20 cd fb a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333653.957809 type=1 bytes=10 c0 fd 90 03 c0 fd a2 01 ce fb
+1792333653.982807 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb 8f 03
+1792333653.987806 type=1 bytes=20 cd fb a1 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01 a6 fd 87 01
+1792333654.024804 type=1 bytes=10 c0 fd 90 03 c0 fd a2 01 cd fb
+1792333654.049805 type=1 bytes=20 e0 f7 a2 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb 90 03
+1792333654.054805 type=1 bytes=20 cd fb a0 01 bf fd a0 01 c0 fd a1 01 bf fd a0 01 bf fd a1 01
+1792333654.091806 type=1 bytes=10 c1 fd 91 03 c0 fd a1 01 cd fb
+1792333654.116804 type=1 bytes=20 e1 f7 a3 01 c0 fd a1 01 c0 fd 90 03 cd fb 90 03 cd fb 8f 03
+1792333654.121809 type=1 bytes=20 b3 fb 87 01 bf fd a0 01 c0 fd a1 01 c0 fd a1 01 c0 fd a1 01
+1792333654.157803 type=1 bytes=10 bf fd 8f 03 c0 fd a2 01 cd fb
+1792333654.183802 type=1 bytes=20 e1 f7 a3 01 bf fd a0 01 bf fd 8f 03 cc fb 8f 03 cd fb 90 03
+1792333654.188806 type=1 bytes=20 cd fb a0 01 bf fd a1 01 c0 fd a0 01 bf fd a0 01 bf fd a0 01
+1792333654.224801 type=1 bytes=10 bf fd 90 03 c0 fd a1 01 cd fb
+1792333654.249805 type=1 bytes=20 e1 f7 a3 01 bf fd a0 01 bf fd 8f 03 cd fb 8f 03 cb fb 9f 01
+1792333654.254806 type=1 bytes=20 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd a0 01 bf fd a0 01
+1792333654.291800 type=1 bytes=10 bf fd 8f 03 cc fb 8f 03 cc fb
+IR_PACKETS=437
