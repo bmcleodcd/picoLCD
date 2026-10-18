@@ -1,0 +1,129 @@
+CAPTURE_READY
+5.016355 type=1 bytes=2 87 ff
+16.057052 type=1 bytes=20 41 f5 1e 03 f9 fd 70 01 f9 fd 6f 01 f9 fd 29 03 f9 fd 29 03
+16.089612 type=1 bytes=20 7d fa 28 03 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01
+16.095591 type=1 bytes=20 f9 fd 6f 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 fa fd 71 01
+16.099587 type=1 bytes=20 f9 fd 6f 01 3b fc 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 28 03
+16.105587 type=1 bytes=20 f8 fd 6f 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 3b fc 28 03
+16.110591 type=1 bytes=20 f8 fd 70 01 fa fd 70 01 f9 fd 70 01 f9 fd 70 01 3b fc 70 01
+16.115564 type=1 bytes=14 f9 fd 6f 01 f8 fd 6f 01 f9 fd 29 03 f9 fd
+16.151585 type=1 bytes=20 41 f5 1d 03 f9 fd 70 01 f9 fd 70 01 fa fd 29 03 f9 fd 29 03
+16.195616 type=1 bytes=20 7d fa 29 03 f9 fd 6f 01 f9 fd 70 01 f8 fd 6f 01 f9 fd 70 01
+16.201618 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 fa fd 70 01 f9 fd 70 01
+16.205617 type=1 bytes=20 f9 fd 70 01 3b fc 70 01 f9 fd 6f 01 f8 fd 6f 01 f9 fd 29 03
+16.211614 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 f8 fd 6f 01 3b fc 29 03
+16.216614 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 fa fd 70 01 f9 fd 70 01 3b fc 70 01
+16.221613 type=1 bytes=14 f9 fd 70 01 f9 fd 70 01 fa fd 29 03 f9 fd
+17.059571 type=1 bytes=20 41 f5 1d 03 f8 fd 6e 01 f8 fd 6f 01 f7 fd 27 03 f8 fd 28 03
+17.250582 type=1 bytes=20 7c fa 27 03 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+17.256573 type=1 bytes=20 f8 fd 6e 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+17.260573 type=1 bytes=20 f8 fd 6e 01 39 fc 6e 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+17.265569 type=1 bytes=20 f8 fd 27 03 f7 fd 6f 01 f9 fd 6f 01 f8 fd 6f 01 3a fc 28 03
+17.271569 type=1 bytes=20 f8 fd 6f 01 f9 fd 70 01 f9 fd 6f 01 f8 fd 6f 01 3a fc 6f 01
+17.276573 type=1 bytes=14 f9 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd
+17.312566 type=1 bytes=20 41 f5 1d 03 f9 fd 70 01 f9 fd 70 01 f9 fd 28 03 f8 fd 28 03
+17.356568 type=1 bytes=20 7c fa 28 03 f9 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+17.362568 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 f8 fd 6f 01 f9 fd 70 01
+17.366571 type=1 bytes=20 f9 fd 70 01 3b fc 70 01 f9 fd 70 01 f9 fd 6f 01 f8 fd 6f 01
+17.371571 type=1 bytes=20 f8 fd 28 03 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 3a fc 28 03
+17.377568 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 3b fc 70 01
+17.382567 type=1 bytes=14 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd
+18.020224 type=1 bytes=20 41 f5 1e 03 f9 fd 6f 01 f9 fd 70 01 f9 fd 29 03 f9 fd 29 03
+18.185559 type=1 bytes=20 7d fa 28 03 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 fa fd 71 01
+18.191559 type=1 bytes=20 fa fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01
+18.195555 type=1 bytes=20 fa fd 71 01 3c fc 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 29 03
+18.200555 type=1 bytes=20 fa fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 3b fc 28 03
+18.206558 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 3b fc 29 03 fa fd 71 01
+18.211558 type=1 bytes=14 fa fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd
+18.247552 type=1 bytes=20 42 f5 1e 03 f9 fd 70 01 fa fd 71 01 fa fd 29 03 f9 fd 29 03
+18.291557 type=1 bytes=20 7c fa 27 03 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01
+18.297557 type=1 bytes=20 fa fd 71 01 fa fd 70 01 f8 fd 6f 01 f9 fd 70 01 f9 fd 70 01
+18.301553 type=1 bytes=20 f9 fd 70 01 3b fc 70 01 fa fd 70 01 f9 fd 70 01 f9 fd 29 03
+18.306554 type=1 bytes=20 f9 fd 70 01 f9 fd 6f 01 f8 fd 6f 01 f9 fd 70 01 3b fc 29 03
+18.312553 type=1 bytes=20 f9 fd 70 01 fa fd 70 01 f9 fd 70 01 3b fc 29 03 f9 fd 70 01
+18.317557 type=1 bytes=14 fa fd 71 01 fa fd 71 01 fa fd 70 01 f9 fd
+18.353579 type=1 bytes=20 43 f5 1e 03 f9 fd 70 01 f9 fd 70 01 f9 fd 28 03 f8 fd 28 03
+18.397623 type=1 bytes=20 7d fa 29 03 f9 fd 70 01 fa fd 70 01 f9 fd 70 01 f9 fd 70 01
+18.403580 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 fa fd 70 01 f9 fd 70 01
+18.407495 type=1 bytes=20 f9 fd 70 01 3b fc 70 01 f9 fd 70 01 f9 fd 6f 01 f9 fd 29 03
+18.413494 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 fa fd 71 01 3c fc 29 03
+18.418496 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01 3b fc 28 03 f9 fd 70 01
+18.423497 type=1 bytes=14 f9 fd 70 01 f9 fd 70 01 fa fd 71 01 fa fd
+19.261590 type=1 bytes=20 42 f5 1f 03 fb fd 71 01 fa fd 71 01 fa fd 2a 03 fb fd 2b 03
+19.339544 type=1 bytes=20 7e fa 29 03 fa fd 71 01 fb fd 72 01 fa fd 71 01 fb fd 72 01
+19.345538 type=1 bytes=20 fb fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 72 01 fb fd 72 01
+19.349565 type=1 bytes=20 fb fd 72 01 3d fc 72 01 fb fd 71 01 fa fd 71 01 fb fd 72 01
+19.354568 type=1 bytes=20 fb fd 2b 03 fb fd 71 01 fa fd 71 01 fb fd 72 01 3c fc 2a 03
+19.360539 type=1 bytes=20 fb fd 72 01 fb fd 71 01 fa fd 71 01 3c fc 2a 03 fb fd 72 01
+19.365537 type=1 bytes=10 fb fd 72 01 fb fd 72 01 3d fc
+19.401533 type=1 bytes=20 43 f5 1f 03 fa fd 71 01 fb fd 72 01 fb fd 2a 03 fa fd 2a 03
+19.445566 type=1 bytes=20 7e fa 2a 03 fb fd 72 01 fb fd 72 01 fb fd 71 01 fa fd 71 01
+19.451563 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fb fd 71 01 fa fd 71 01 fa fd 71 01
+19.455564 type=1 bytes=20 fa fd 71 01 3c fc 71 01 fb fd 72 01 fb fd 71 01 fa fd 72 01
+19.460566 type=1 bytes=20 fb fd 2a 03 fb fd 72 01 fb fd 72 01 fa fd 71 01 3d fc 2a 03
+19.466566 type=1 bytes=20 fa fd 71 01 fb fd 72 01 fb fd 72 01 3d fc 2a 03 fa fd 71 01
+19.471563 type=1 bytes=10 fb fd 72 01 fb fd 72 01 3d fc
+20.310230 type=1 bytes=20 42 f5 1f 03 fb fd 72 01 fb fd 71 01 fa fd 2a 03 fa fd 2a 03
+20.400549 type=1 bytes=20 7f fa 2b 03 fb fd 71 01 fa fd 71 01 fa fd 71 01 fa fd 71 01
+20.405549 type=1 bytes=20 fa fd 71 01 fb fd 72 01 fb fd 71 01 fb fd 72 01 fb fd 72 01
+20.410551 type=1 bytes=20 fa fd 71 01 3d fc 72 01 fb fd 71 01 fa fd 71 01 fa fd 2a 03
+20.415553 type=1 bytes=20 fb fd 72 01 fb fd 71 01 fa fd 71 01 fa fd 71 01 3c fc 2a 03
+20.420548 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fb fd 71 01 3c fc 2a 03 fb fd 72 01
+20.426548 type=1 bytes=10 fa fd 71 01 3d fc 2a 03 fa fd
+20.462549 type=1 bytes=20 42 f5 1f 03 fb fd 72 01 fb fd 71 01 fa fd 2a 03 fa fd 2a 03
+20.506555 type=1 bytes=20 7f fa 2a 03 fa fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 72 01
+20.511551 type=1 bytes=20 fb fd 72 01 fb fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 72 01
+20.516548 type=1 bytes=20 fa fd 71 01 3c fc 71 01 fb fd 71 01 fa fd 71 01 fa fd 2a 03
+20.521548 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fa fd 70 01 fa fd 71 01 3c fc 2a 03
+20.526551 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fb fd 71 01 3c fc 2a 03 fb fd 72 01
+20.532550 type=1 bytes=10 fb fd 72 01 3d fc 2a 03 fa fd
+21.370854 type=1 bytes=20 43 f5 1e 03 fa fd 71 01 fa fd 71 01 fa fd 2a 03 fa fd 29 03
+21.548464 type=1 bytes=20 7d fa 29 03 fa fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 71 01
+21.554487 type=1 bytes=20 fa fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 72 01 fa fd 71 01
+21.558483 type=1 bytes=20 fb fd 71 01 3c fc 71 01 fa fd 71 01 fa fd 71 01 fa fd 71 01
+21.563486 type=1 bytes=20 fb fd 2a 03 fa fd 71 01 fa fd 71 01 fa fd 71 01 3c fc 2a 03
+21.569482 type=1 bytes=20 fb fd 71 01 fa fd 71 01 fa fd 71 01 3c fc 2a 03 fb fd 72 01
+21.574482 type=1 bytes=10 fb fd 72 01 3d fc 71 01 fa fd
+21.610544 type=1 bytes=20 42 f5 1f 03 fa fd 71 01 fa fd 71 01 fb fd 2b 03 fb fd 2a 03
+21.654547 type=1 bytes=20 7e fa 2a 03 fb fd 72 01 fb fd 72 01 fb fd 72 01 fb fd 71 01
+21.660546 type=1 bytes=20 fa fd 71 01 fa fd 71 01 fa fd 71 01 fb fd 72 01 fb fd 72 01
+21.664549 type=1 bytes=20 fb fd 71 01 3c fc 71 01 fb fd 72 01 fb fd 72 01 fb fd 71 01
+21.669549 type=1 bytes=20 fa fd 2a 03 fa fd 71 01 fb fd 72 01 fb fd 72 01 3d fc 2a 03
+21.675529 type=1 bytes=20 fa fd 71 01 fa fd 71 01 fb fd 72 01 3d fc 2a 03 fa fd 71 01
+21.680529 type=1 bytes=10 fa fd 71 01 3c fc 71 01 fb fd
+35.556442 type=1 bytes=20 45 f5 24 03 ff fd 76 01 ff fd 76 01 ff fd 2e 03 fe fd 2d 03
+35.725347 type=1 bytes=20 81 fa 2d 03 fd fd 73 01 fd fd 74 01 fd fd 74 01 fd fd 74 01
+35.730325 type=1 bytes=20 fd fd 74 01 fd fd 74 01 fe fd 75 01 fe fd 74 01 fd fd 74 01
+35.735321 type=1 bytes=20 fd fd 74 01 3f fc 74 01 fd fd 73 01 fd fd 74 01 fd fd 2d 03
+35.740315 type=1 bytes=20 fd fd 74 01 fd fd 74 01 fd fd 73 01 fd fd 74 01 3f fc 2d 03
+35.745320 type=1 bytes=20 fd fd 73 01 fc fd 73 01 fc fd 73 01 fc fd 73 01 3f fc 2c 03
+35.751321 type=1 bytes=10 3d fc 72 01 fc fd 2c 03 fc fd
+35.787309 type=1 bytes=20 43 f5 20 03 fb fd 72 01 fb fd 72 01 fc fd 2b 03 fb fd 2b 03
+35.831341 type=1 bytes=20 7e fa 2a 03 fb fd 71 01 fb fd 72 01 fb fd 72 01 fb fd 72 01
+35.836314 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fb fd 71 01 fb fd 72 01 fa fd 71 01
+35.841310 type=1 bytes=20 fb fd 72 01 3d fc 72 01 fb fd 71 01 fa fd 71 01 fa fd 2a 03
+35.846316 type=1 bytes=20 fb fd 72 01 fb fd 72 01 fb fd 71 01 fa fd 71 01 3c fc 2a 03
+35.851310 type=1 bytes=20 fb fd 72 01 fb fd 71 01 fa fd 71 01 fa fd 71 01 3c fc 2a 03
+35.857319 type=1 bytes=10 3d fc 72 01 fb fd 2a 03 fa fd
+36.294725 type=1 bytes=20 41 f5 1d 03 f9 fd 6f 01 f8 fd 6f 01 f8 fd 28 03 f9 fd 29 03
+36.295307 type=1 bytes=20 7d fa 28 03 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f9 fd 70 01
+36.301300 type=1 bytes=20 f9 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f9 fd 70 01
+36.306302 type=1 bytes=20 f9 fd 70 01 3b fc 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+36.310305 type=1 bytes=20 f9 fd 29 03 f9 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 3a fc 28 03
+36.316305 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 f9 fd 70 01 3b fc 70 01
+36.321305 type=1 bytes=14 f9 fd 28 03 f8 fd 6f 01 f8 fd 6f 01 f8 fd
+36.357303 type=1 bytes=20 41 f5 1d 03 f8 fd 6f 01 f8 fd 6e 01 f8 fd 28 03 f8 fd 28 03
+36.401304 type=1 bytes=20 7c fa 27 03 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+36.407302 type=1 bytes=20 f8 fd 6e 01 f7 fd 6e 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+36.412300 type=1 bytes=20 f8 fd 6f 01 3a fc 6e 01 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01
+36.416300 type=1 bytes=20 f8 fd 27 03 f8 fd 6f 01 f8 fd 6f 01 f8 fd 6f 01 3a fc 28 03
+36.422300 type=1 bytes=20 f8 fd 6f 01 f8 fd 6f 01 f9 fd 6f 01 f8 fd 6f 01 3a fc 6f 01
+36.427306 type=1 bytes=14 f8 fd 28 03 f9 fd 70 01 f8 fd 6e 01 f8 fd
+36.463296 type=1 bytes=20 41 f5 1d 03 f9 fd 70 01 f9 fd 6f 01 f8 fd 28 03 f9 fd 29 03
+36.508302 type=1 bytes=20 7d fa 28 03 f8 fd 6f 01 f9 fd 70 01 f9 fd 70 01 f9 fd 70 01
+36.513302 type=1 bytes=20 f9 fd 70 01 f9 fd 70 01 f9 fd 6f 01 f9 fd 70 01 f9 fd 70 01
+36.518299 type=1 bytes=20 f9 fd 70 01 3b fc 70 01 f9 fd 6f 01 f8 fd 6f 01 f9 fd 70 01
+36.523289 type=1 bytes=20 f9 fd 29 03 fa fd 71 01 fa fd 70 01 f8 fd 6f 01 3a fc 28 03
+36.528301 type=1 bytes=20 f9 fd 70 01 fa fd 71 01 f9 fd 70 01 fa fd 71 01 3b fc 6f 01
+36.533307 type=1 bytes=14 f9 fd 29 03 f9 fd 70 01 fa fd 71 01 fa fd
+IR_PACKETS=127

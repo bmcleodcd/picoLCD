@@ -1,4 +1,56 @@
 ChangeLog:
+2026-10-18 bmcleodcd
+    - Add Ortek VRC-1100 IR keyboard and mouse support through the built-in
+      LCD receiver, including configurable mappings, learning/capture tools,
+      repeat handling, acceleration, dragging and USB receiver suppression.
+    - Add HP RC6 MCE and original Xbox DVD remote decoding and Kodi mappings,
+      with timing validation, repeat suppression and captured-signal tests.
+    - Replace X11/libxdo input with native Linux uinput keyboard and mouse
+      devices; preserve shared key/button ownership and release held input
+      on shutdown, launch, receiver takeover and input failures.
+    - Isolate optional XRandR display sampling in a supervised helper so
+      input and the main panel process operate independently of X11.
+    - Complete live display diagnostics and panel service recovery setup.
+    - Extend sanitizer/regression checks for input, remote decoders, display
+      handling and captured keyboard/mouse signals; add live uinput checks.
+    - Consolidate build, architecture, configuration, installation, rollback
+      and EEPROM guidance in AGENTS.md; refresh README and legacy SDK notes.
+    - Make documentation, map/capture filenames and learning output generic
+      across machines; remove the unused bundled libxdo header.
+
+2026-10-10 bmcleodcd
+    - Show temporary display resolution/refresh-rate overlays, retaining the
+      last mode across abrupt panel restarts and prioritizing volume overlays.
+
+2026-10-09 bmcleodcd
+    - Show CPU usage when NVML GPU temperature is unavailable, with bounded
+      sensor sampling and placeholders for failed or initial readings.
+
+2026-09-28 bmcleodcd
+    - Refactor the Linux 20x2 panel loop; correct USB event/timeout handling,
+      button press/release tracking, RC5 decoding and orderly shutdown.
+    - Replace shell-based panel operations with native APIs, including
+      asynchronous system D-Bus requests to start RetroArch.
+    - Add background Kodi JSON-RPC and RetroArch UDP metadata sampling with
+      timeouts; scroll media/game titles and retain titles while paused.
+    - Add playback progress, pause/live status, volume/mute overlays and
+      centred status messages, updating LCD rows only when content changes.
+    - Add bounded EEPROM splash programming with acknowledgements, read-back
+      verification, full backup/restore and rollback on failure; supply an
+      animated cat power-on splash and checked installer.
+    - Add private builds, sanitizer/regression checks and versioned panel
+      installation with release checksums, service checks and rollback.
+
+2023-08-10 bmcleodcd
+    - Add NVIDIA GPU temperature reporting through NVML.
+
+2023-07-19 to 2023-07-21 bmcleodcd
+    - Add physical panel button actions and configurable key bindings using
+      lookup tables; switch key injection from shell commands to libxdo
+      (superseded by native Linux uinput in 2026).
+    - Keep the panel clock updating between USB read-event timeouts and
+      add CPU temperature reporting.
+
 2010-03-12 Nicu Pavel (npavel@ituner.com)
     - 0.1.9 - release 
 	- added support for picolcd 20x4 and 256x64 products

@@ -1,3 +1,9 @@
+/*
+ * Changes by bmcleodcd: 2026-09-28.
+ * Modification/licence notice added by bmcleodcd: 2026-10-18.
+ * This file is part of picoLCD and is distributed under the GNU General
+ * Public License, version 2. See COPYING for the terms and warranty disclaimer.
+ */
 /* Copyright 2006-2010 iTuner Corporation */
 /* Common routines between picolcd 20x2, 20x4, 256x64 */
 /* npavel@ituner.com */
@@ -34,11 +40,16 @@ void picolcd_exit_flasher_mode(usblcd_operations *self);
 void picolcd_setfont(usblcd_operations *self, char *filename);
 void picolcd_setfont_memory(usblcd_operations *self, int fontlines[], int nrchars);
 void picolcd_setsplash(usblcd_operations *self, char *filename);
+int picolcd_setsplash_checked(usblcd_operations *self, const char *filename);
+int picolcd_eeprom_read(usblcd_operations *self, unsigned char data[256]);
+int picolcd_eeprom_restore(usblcd_operations *self, const unsigned char data[256]);
 void picolcd_flash(usblcd_operations *self);
 void picolcd_keystate(usblcd_operations *self);
 void picolcd_irdata(usblcd_operations *self);
 void picolcd_powerstate(usblcd_operations *self);
 void picolcd_send(usblcd_operations *self, char *data, int size);
 usblcd_event * picolcd_read_events(usblcd_operations *self);
+/* NULL means timeout/ignored packet (errno 0 or ETIMEDOUT), or an errno error. */
+usblcd_event *picolcd_read_events_timeout(usblcd_operations *self, int timeout_ms);
 void picolcd_close(usblcd_operations *self);
 void picolcd_unimplemented(void);

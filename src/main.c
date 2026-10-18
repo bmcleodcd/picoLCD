@@ -1,3 +1,9 @@
+/*
+ * Changes by bmcleodcd: 2023-07-19, 2023-07-20, 2023-07-21, 2023-08-10, 2026-09-28.
+ * Modification/licence notice added by bmcleodcd: 2026-10-18.
+ * This file is part of picoLCD and is distributed under the GNU General
+ * Public License, version 2. See COPYING for the terms and warranty disclaimer.
+ */
 /* Copyright 2006 iTuner Corporation */
 /* npavel@ituner.com */
 
@@ -7,15 +13,16 @@
 #include <stdlib.h>
 
 #include <time.h>
+#include "panel.h"
 
 #include "picolcd.h"
+#include "picolcd-common.h"
 #include "rc5.h"
 #include "widgets.h"
 #include "picolcd-util.h"
 
 //#define DEBUG
 #undef DEBUG
-
 void usage (char *program)
 {
     printf ("Usage: %s [commands]\n", program);
@@ -36,6 +43,8 @@ void usage (char *program)
     printf ("\tprints text on LCD screen starting with row and column\n");
     printf (" splash [filename]\n");
     printf ("\tsets the splash screens content from filename.\n");
+    printf (" eeprom-backup [new filename] | eeprom-restore [filename]\n");
+    printf ("\tbackup/restore the 256-byte internal EEPROM (20x2 only).\n");
     printf (" setfont [filename]\n");
     printf ("\toverwrite the first 10 characters from LCD CGRAM\n");
     printf ("\twith the caracters from filename.\n");
@@ -61,7 +70,7 @@ int main (int argc, char **argv)
     /* for connecting and communication with the device */
     usblcd_operations *mylcd;
     /* for keypad and infrared events */
-    usblcd_event *event;
+
     
     char *s;
     FILE *file;
@@ -74,14 +83,46 @@ int main (int argc, char **argv)
     }
     
     /* init hid device and usblcd_operations structure */
-    if ((mylcd = new_driver(PICOLCD20x4)) == NULL)
+    if ((mylcd = new_driver(PICOLCD20x2)) == NULL)
 	return 1;
 	
     /* set hid debug level */
-    mylcd->hid->debug(5);
+    mylcd->hid->debug(0);
     /* set usblcd debug level */
-    mylcd->debug(5);
+    mylcd->debug(0);
     /* init the USB LCD */
+    /* EEPROM commands below need no firmware-version or display requests. */
+    if (strcmp(argv[1], "eeprom-backup") == 0 || strcmp(argv[1], "eeprom-restore") == 0 ||
+        strcmp(argv[1], "splash") == 0) {
+        unsigned char data[256];
+        int result = -1;
+        if (argc != 3) fprintf(stderr, "This command needs exactly one filename\n");
+        else if (strcmp(argv[1], "splash") == 0)
+            result = picolcd_setsplash_checked(mylcd, argv[2]);
+        else if (strcmp(argv[1], "eeprom-backup") == 0) {
+            if (picolcd_eeprom_read(mylcd, data) == 0) {
+                file = fopen(argv[2], "wbx");
+                if (file) {
+                    int ok = fwrite(data, 1, sizeof(data), file) == sizeof(data) &&
+                             fflush(file) == 0 && fsync(fileno(file)) == 0;
+                    if (fclose(file) != 0) ok = 0;
+                    if (ok) result = 0;
+                }
+            }
+        } else {
+            file = fopen(argv[2], "rb");
+            if (file) {
+                int ok = fread(data, 1, sizeof(data), file) == sizeof(data) &&
+                         fgetc(file) == EOF && !ferror(file);
+                fclose(file);
+                if (ok) result = picolcd_eeprom_restore(mylcd, data);
+            }
+        }
+        if (result < 0) fprintf(stderr, "EEPROM operation failed\n");
+        mylcd->close(mylcd);
+        return result < 0 ? 1 : 0;
+    }
+
     mylcd->init(mylcd);
     /* clear the LCD screen */
     //mylcd->clear(mylcd);
@@ -162,12 +203,9 @@ int main (int argc, char **argv)
 	}
 	
 	if (strncmp(s, "splash", 6) == 0) {
-	    if ((file = fopen(argv[arg+1], "r")) != NULL) {
-		mylcd->setsplash(mylcd, argv[arg+1]);
-		arg++;
-	    } 
-	    else  
-		printf("File %s not readable\n",argv[arg+1]);
+            fprintf(stderr, "Run splash as a separate command with one filename\n");
+            mylcd->close(mylcd);
+            return 1;
 	}
 	
 	if (strncmp(s, "flash", 5) == 0) {
@@ -182,42 +220,16 @@ int main (int argc, char **argv)
 	if (strncmp(s, "clear", 5) == 0) {
 		mylcd->clear(mylcd);
 	}
+
+
 	
 	if (strncmp(s, "read", 4) == 0) {
-	    rc5decoder *rc5;
-	    rc5 = rc5_init();
-	    
-	    while (1) 
-	    {
-		
-		if ((event = mylcd->read_events(mylcd)) == NULL)
-		    continue;
-		
-		if (event->type == 0) 
-		{
-		    fprintf(stderr, "Key: %02x %02x\n", event->data[0], event->data[1]);
-		}
-		
-		if (event->type == 1)
-		{
-#ifdef DEBUG		    
-		    int i;
-		    for (i = 0; i < event->length; i++)
-			fprintf(stderr, "%02x ", event->data[i]);
-		    printf("\n");
-#endif
-		    
-		    rc5_decode(rc5, event->data, event->length);
-		}
-		
-		usleep(10);
-		
-		free(event->data);
-		free(event);
-	    }
-	}	
-	
-	if (strncmp(s, "histo", 5) == 0) {
+	    int result = panel_run(mylcd);
+        mylcd->close(mylcd);
+        return result;
+    }
+
+    if (strncmp(s, "histo", 5) == 0) {
 	    histo_opts options;
 	    int values[64],i;
 	    srand((unsigned)time(0));
@@ -273,3 +285,6 @@ int main (int argc, char **argv)
     mylcd->close(mylcd);
     return 0;
 }
+
+
+

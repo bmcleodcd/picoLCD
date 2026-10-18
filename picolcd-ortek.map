@@ -1,0 +1,50 @@
+# VRC-1100: paired picoLCD OrtekMCE and USB HID capture, 2026-10-18.
+# command repeat-enabled native-input-key-sequence
+# Digits use ordinary number keys; # sends its intended character directly.
+# Power opens Kodi ShutdownMenu via its S-key shortcut.
+2 0 ctrl+e
+3 0 s
+4 0 ctrl+i
+5 0 XF86HomePage
+6 0 ctrl+shift+t
+7 0 ctrl+m
+8 0 XF86AudioPrev
+9 0 ctrl+shift+f
+10 0 ctrl+shift+m
+11 0 XF86AudioPlay
+12 0 ctrl+t
+13 0 ctrl+shift+b
+14 0 ctrl+o
+15 0 ctrl+g
+16 0 XF86AudioStop
+17 0 XF86AudioNext
+18 0 mouse:3
+19 0 ctrl+r
+20 0 XF86AudioPlay
+21 1 Up
+22 0 BackSpace
+23 1 Left
+30 0 6
+31 0 3
+32 1 Down
+33 1 Right
+34 0 Return
+35 0 5
+36 0 2
+37 0 8
+38 0 9
+39 0 Return
+40 0 numbersign
+41 0 Escape
+42 0 0
+43 0 KP_Multiply
+44 0 alt+F4
+45 0 7
+46 0 alt+super+Return
+47 1 Prior
+48 0 XF86AudioMute
+49 1 Next
+50 1 XF86AudioRaiseVolume
+51 1 XF86AudioLowerVolume
+52 0 1
+53 0 4

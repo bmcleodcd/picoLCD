@@ -1,48 +1,54 @@
-# picoLCD - linux driver and SDK for Mini-Box.com USB LCD
+# picoLCD
 
-[picoLCD](https://www.mini-box.com/picoLCD) is a family of Intelligent USB LCD displays with true HID USB interface. Current end existent products range from simple 2x20 LCDs, 4x20 as well as graphic models (256x64). The picoLCD has strong application support (SDK included) for Windows XP and Linux as well as native Vista SideShow auxiliary display driver support and SDK.
+Linux driver and SDK for Mini-Box USB LCD displays, with a Kodi/RetroArch panel
+service for Linux media-center systems. The legacy library includes 20x2, 20x4
+and 256x64 drivers; the custom panel behavior targets the 20x2 display.
 
-![256x64](https://www.mini-box.com/core/media/media.nl?id=18687&c=ACCT127230&h=3cde0d8a695a00886f7b)
-![20x2](https://www.mini-box.com/core/media/media.nl?id=18681&c=ACCT127230&h=13d54ca450368cba4c0e)
+The panel shows date/media titles, playback status, volume/display changes and
+temperatures. Physical buttons and Ortek VRC-1100, HP RC6 MCE and original Xbox
+DVD remotes use native Linux uinput keyboard/mouse devices. The built-in LCD
+IR receiver handles these remotes without separate remote-specific receivers.
+An optional XRandR helper supplies display-mode information; input works
+independently of X11. The main panel binary does not link libxdo, X11 or XRandR.
 
-## Features
+## Licence and attribution
 
-- True full-speed USB HID device
-- USB full-speed 2.0 support
-- 10 custom splash screens, custom timing / looping
-- IR receiver connector
-- LIRC support (20x2, 20x4)
-- Keypad / LED connector
-- USART and I2C connectors
-- Supports 8 GPO
-- Custom fonts and splash screens
+This fork is distributed under the GNU General Public License, version 2
+(GPLv2). See [COPYING](COPYING) for the full licence and warranty disclaimer.
+The original picoLCD SDK is by Nicu Pavel / iTuner Corporation (Mini-Box);
+original copyright notices and [AUTHORS](AUTHORS) are retained.
 
+Changes by bmcleodcd, 2023-2026, add the Linux media-center panel and related
+features described in [ChangeLog](ChangeLog). This is a modified version of
+the original SDK. Modification/licence notices were added on 2026-10-18.
+Redistributed modified versions remain subject to GPLv2; distribution of
+binaries must satisfy its corresponding-source requirements.
 
-## Building
-        ./autogen.sh
-        make install
+## Build and maintenance
 
-## Running on MacOS
+See [AGENTS.md](AGENTS.md) for dependencies, architecture, remote protocols,
+configuration, validation, installation, rollback and EEPROM maintenance.
+The checked Linux build creates private artifacts without installing them:
 
-SDK supports all models and can be built on MacOS. The 256x64 is not yet fully supported. It also supports MacOS leopard and snow leopard. For MacOS a codeless kext must be installed before SDK can be used. See the kext/ folder inside archive.
+```sh
+sh build-check.sh
+# For a host with CPU temperature but no NVML GPU temperature:
+PANEL_TEST_GPU=unavailable sh build-check.sh
+```
 
-## Examples
+After a successful check, `sudo sh install-panel.sh` installs the versioned
+panel release and restarts `panel.service`. This installer is for the existing
+systemd panel setup; inspect the host's service configuration before using it.
 
-See [examples](doc/examples/) folder 
+## Legacy SDK material
 
-## lcdproc, lcd4linux, kernel patches 
-*already included in mainline no longer needed*
-See [patches](patches/) folder
+- [Library development guide](doc/libusblcd-development-guide.txt)
+- [Command-line client guide](doc/usblcd-client-guide.txt)
+- [Examples](doc/examples/)
+- [Historical integration patches](patches/)
+- [Historical macOS kext notes](kext/README.md)
 
-## Ubuntu packages (ppa)
-*no longer updated*
-[Ubuntu PPA](https://launchpad.net/~mini-box.com/+archive/ubuntu/ppa)
-
-## Using the SDK library
-
-See [libusblcd](doc/libusblcd-development-guide.txt) documentation
-
-## Using the picoLCD app
-See [picolcd](doc/usblcd-client-guide.txt) documentation
-
-    
+Those guides/examples describe the inherited SDK and may predate this fork's
+Linux panel service. They are not evidence of current macOS/Windows support
+or of the current input architecture. Historical implementation and deployment
+notes are retained in Git history.

@@ -1,3 +1,9 @@
+/*
+ * Changes by bmcleodcd: 2026-09-28.
+ * Modification/licence notice added by bmcleodcd: 2026-10-18.
+ * This file is part of picoLCD and is distributed under the GNU General
+ * Public License, version 2. See COPYING for the terms and warranty disclaimer.
+ */
 /* Copyright 2006-2010 iTuner Corporation */
 /* Common routines between picolcd 20x2, 20x4, 256x64 */
 /* npavel@ituner.com */
@@ -6,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <errno.h>
 
 #include "driver.h"
 #include "picolcd.h"
@@ -78,106 +85,6 @@ static usblcd_font_data * get_font_data(char *fontfile, unsigned int max_fonts, 
     }
     
     return chars;
-}
-
-static usblcd_splash_data * get_splash_data(char *splashfile, unsigned int max_splashes, unsigned int rows, unsigned int cols)
-{
-    FILE *file;
-    usblcd_splash_data *splashes, *splash;
-    char *line;
-    char *tmp;
-    int index = 0;
-    int i;
-    unsigned int found = 0;
-    
-    
-    if ((file = fopen(splashfile, "r")) == NULL) 
-	return NULL;
-    
-    line = (char *) malloc (255);
-    if (line == NULL)
-	return NULL;
-
-    tmp = (char *) malloc (3);
-    if (tmp == NULL)
-	return NULL;
-	
-    splashes = (usblcd_splash_data *) malloc (max_splashes * sizeof(usblcd_splash_data));
-    if (splashes == NULL)
-	return NULL;
-	
-    
-    splash = splashes;
-    
-    while (index < max_splashes) {
-	for (i = 0; i < rows + 1; i++) {
-	    splash->line[i] = (char *) malloc (cols + 1 + 1);
-	    memset(splash->line[i],' ', cols + 1);
-	}
-	splash->min = 0;
-	splash->sec = 0;
-	splash->jump = 0;
-	splash->repeat = 0;
-	splash->leds = 0;
-	splash++;
-	index++;
-    }
-    
-    while(fgets(line, 255, file))
-    {
-	if (line[0] == '#')
-	    continue;
-	if (strncmp(line, SPLASH_HEADER, 5) == 0) {
-	    found = 1;
-	    break;
-	}
-    }
-    
-    if (!found) {
-	fprintf(stderr,"Can't find splash file header for file: %s.\n", splashfile);
-	return NULL;
-    }
-    
-    splash = splashes;
-    while (fgets(line, 255, file)) 
-    {
-	if ((line[0] == '#') || (line[0]=='\n'))
-	    continue;
-	/* minutes and seconds */	
-	memcpy(tmp, &line[0], 2);
-	splash->min = atoi(tmp);
-	if (splash->min > 59) splash->min = 59;
-	
-	memcpy(tmp, &line[3], 2);
-	splash->sec = atoi(tmp);
-	if (splash->sec > 59) splash->sec = 59;
-	
-	/* next slot jump and repeat */	
-	fgets(line, 255, file);
-	memcpy(tmp, &line[0], 2);
-	splash->jump = atoi(tmp);
-	if (splash->jump > 10) splash->jump = 10;
-	
-	memcpy(tmp, &line[3], 3);
-	splash->repeat = atoi(tmp);
-	if (splash->repeat > 255) splash->repeat = 255;
-
-	/* leds state (8 chars) */	
-	fgets(line, 255, file);
-	splash->leds =  bin2int(line);
-	
-	/* lcd lines text */
-	for (i = 0; i < rows + 1; i++) {
-	    fgets(line, 255, file);
-	    snprintf(splash->line[i], cols + 1 + 1, "%s", line);
-	}
-	splash++;
-    }
-    
-    free(line);
-    free(tmp);
-    
-    return splashes;
 }
 
 /* public functions */
@@ -415,90 +322,6 @@ void picolcd_setfont_memory(usblcd_operations *self, int fontlines[], int nrchar
 }
 
 
-void picolcd_setsplash(usblcd_operations *self, char *filename)
-{
-    hid_params *params;
-    usblcd_splash_data *buffer, *splash;
-    char * splashes_text;
-    int i;
-    int index;
-    int offset;
-    int splashes_size;
-    int splash_size;
-    unsigned long ftime = 0;
-    unsigned long faddr = 0;
-    
-    splash_size = (self->cols + 1 + 1);
-    splashes_size = splash_size * (self->rows + 1) * self->max_splashes + self->max_splashes * 4; /* 4 control bytes */
-
-    buffer = get_splash_data(filename, self->max_splashes, self->rows, self->cols);
-    if (buffer == NULL)
-	return;
-    
-    splashes_text = (char *) malloc (splashes_size);
-    if (splashes_text == NULL)
-	return;
-	
-    memset(splashes_text, 0x00, splashes_size);
-    
-    params =(hid_params *) malloc (sizeof(hid_params));
-    params->endpoint = USB_ENDPOINT_OUT + 1;
-    params->timeout = HID_TIMEOUT;
-    params->packetlen = self->max_data_len;
-    params->packet = (char *) malloc ( params->packetlen + 1);
-    
-    splash = buffer;
-    index = 0;
-    offset = 0;
-    while (index < self->max_splashes) {
-    
-	if ((splash->min <= -1) || (splash->sec <= -1))
-	    ftime = 0xFFFF;
-	else 
-	    ftime = splash->min * 60 + splash->sec;
-	    
-	    
-	for (i = 0; i < self->rows + 1; i++) {
-	    if (i == 0) {
-		snprintf(splashes_text + offset, 5 + 1, "%c%c%c%c%c", (int) ftime & 0xFF, (int) (ftime >> 8) & 0xFF, splash->jump, splash->repeat, splash->leds);
-		//snprintf(splashes_text + offset, 3 + 1, "%c%c%c", ftime & 0xFF, (ftime >> 8) & 0xFF, splash->leds);
-		offset += 5;
-		//fprintf (stderr, "\nHeader: %02x%02x%02x%02x%02x\n",ftime & 0xFF, (ftime >> 8) & 0xFF, splash->jump, splash->repeat, splash->leds);
-	    }
-	    
-	    memcpy(splashes_text + offset  , splash->line[i], splash_size);
-	    offset = offset +  splash_size;
-	}
-	
-	splash++;
-	index++;
-    }
-    
-    offset = 0;
-    
-    while (offset < splashes_size) {
-	memset(params->packet,' ', params->packetlen);
-	snprintf(params->packet, 4 + 1, "%c%c%c%c", OUT_REPORT_INT_EE_WRITE, (int)(faddr & 0xFF), (int)((faddr >> 8) & 0xFF), 0x14);
-	
-	if ((offset + self->max_data_len - 4) > splashes_size) 
-	    memcpy(params->packet + 4 , splashes_text + offset, 10);
-	else 
-	    memcpy(params->packet + 4 , splashes_text + offset, self->max_data_len - 4);
-	offset += self->max_data_len - 4;
-	faddr += self->max_data_len - 4;
-	
-	print_buffer(params->packet, params->packetlen);
-	index++;
-	self->hid->interrupt_write(self->hid->hiddev->handle, params);
-	self->read_events(self);
-    }    	
-
-    free(params->packet);
-    free(params);
-    free(buffer);
-    free(splashes_text);
-}
-
 void picolcd_flash(usblcd_operations *self)
 {
     return;
@@ -522,81 +345,45 @@ void picolcd_powerstate(usblcd_operations *self)
 
 }
 
-usblcd_event * picolcd_read_events(usblcd_operations *self)
+usblcd_event *picolcd_read_events_timeout(usblcd_operations *self, int timeout_ms)
 {
-    int ret = -1;
-    unsigned char read_packet[self->max_data_len];
+    unsigned char packet[256];
     usblcd_event *event;
-
-    //hid_set_idle(self->hid->hiddev->handle, 0, 0);
-    
-    if ((event = (usblcd_event *) malloc(sizeof(usblcd_event))) == NULL) return NULL;
-    if ((event->data = (unsigned char *) malloc(sizeof(unsigned char) * self->max_data_len)) == NULL) 
-		    return NULL;
-     
-    ret = usb_interrupt_read(self->hid->hiddev->handle, USB_ENDPOINT_IN + 1, (char *)read_packet, self->max_data_len, 10000);
-    
-    if (ret > 0) {
-        switch (read_packet[0]) {
-
-	    case IN_REPORT_KEY_STATE:
-	    {	
-		event->type = 0;
-		event->length = 2;
-		memcpy(event->data, &read_packet[1], event->length);
-#ifdef DEBUG
-		print_buffer(event->data, event->length);
-#endif	
-		return event;
-		
-	    } break;
-
-    	    case IN_REPORT_IR_DATA:
-	    {
-
-		event->type = 1;
-		event->length = read_packet[1];
-		/* IR data packet also has a IR data length field */
-		memcpy(event->data, &read_packet[2], event->length);
-#ifdef DEBUG
-		print_buffer(event->data, event->length);
-#endif	
-		return event;
-
-	    } break;
-
-	    case IN_REPORT_INT_EE_DATA:
-	    {	
-#ifdef DEBUG
-		fprintf(stderr,"IN_REPORT_INT_EE_DATA: ");
-		print_buffer(read_packet, self->max_data_len);
-#endif
-	    } break;
-		
-	    case RESULT_PARAMETER_MISSING:
-	    case RESULT_DATA_MISSING:
-	    case RESULT_BLOCK_READ_ONLY:
-	    case RESULT_BLOCK_TOO_BIG:
-	    case RESULT_SECTION_OVERFLOW:
-	    case HID_REPORT_GET_VERSION:
-	    case HID_REPORT_ERASE_MEMORY:
-	    case HID_REPORT_READ_MEMORY:
-	    case HID_REPORT_WRITE_MEMORY:
-	    case IN_REPORT_EXT_EE_DATA:
-	    case OUT_REPORT_EXT_EE_READ:
-	    case OUT_REPORT_EXT_EE_WRITE:
-	    case OUT_REPORT_INT_EE_READ:
-	    case OUT_REPORT_INT_EE_WRITE:
-	    case HID_REPORT_EXIT_FLASHER:
-	    case HID_REPORT_EXIT_KEYBOARD:
-	    default:
-		break;
-	}
+    int ret, offset, length, type;
+    errno = 0;
+    if (!self || self->max_data_len > sizeof(packet) || self->max_data_len < 3 || timeout_ms <= 0) {
+        errno = EINVAL;
+        return NULL;
     }
-    
-    return NULL;
+    ret = usb_interrupt_read(self->hid->hiddev->handle, USB_ENDPOINT_IN + 1,
+                             (char *)packet, self->max_data_len, timeout_ms);
+    if (ret <= 0) {
+        errno = ret < 0 ? -ret : 0;
+        return NULL;
+    }
+    if (packet[0] == IN_REPORT_KEY_STATE) {
+        if (ret < 3) return NULL;
+        type = 0; offset = 1; length = 2;
+    } else if (packet[0] == IN_REPORT_IR_DATA) {
+        if (ret < 2 || packet[1] == 0 || packet[1] > ret - 2) return NULL;
+        type = 1; offset = 2; length = packet[1];
+    } else {
+        return NULL;
+    }
+    event = malloc(sizeof(*event));
+    if (!event) return NULL;
+    event->data = malloc(length);
+    if (!event->data) { free(event); return NULL; }
+    event->type = type;
+    event->length = length;
+    memcpy(event->data, packet + offset, length);
+    return event;
 }
 
+usblcd_event *picolcd_read_events(usblcd_operations *self)
+{
+    return picolcd_read_events_timeout(self, 10000);
+}
 
 void picolcd_close(usblcd_operations *self)
 {
