@@ -19,7 +19,7 @@ endif
 bin_PROGRAMS = picolcd picolcdboot
 picolcd_DEPENDENCIES = ../lib/libpicolcd.la
 picolcd_LDADD = ../lib/libpicolcd.la $(AM_LDFLAGS) -ldl $(DBUS_LIBS) $(JSON_C_LIBS) -pthread
-picolcd_SOURCES = main.c picolcd-util.c panel.c panel.h media.c media.h input.c input.h display-monitor.c display-monitor.h ../lib/ortek.c ../include/ortek.h
+picolcd_SOURCES = main.c picolcd-util.c panel.c panel.h media.c media.h input.c input.h display-monitor.c display-monitor.h ../lib/ortek.c ../include/ortek.h ../include/rc6-mce.h
 
 picolcdboot_DEPENDENCIES = ../lib/libpicolcd.la
 picolcdboot_LDADD = ../lib/libpicolcd.la $(AM_LDFLAGS)

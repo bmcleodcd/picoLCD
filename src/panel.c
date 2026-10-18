@@ -17,6 +17,7 @@
 #include "media.h"
 #include "picolcd-common.h"
 #include "ortek.h"
+#include "rc6-mce.h"
 
 #define LCD_WIDTH 20
 #define KEY_COUNT 16
@@ -41,7 +42,42 @@ struct ir_context {
     struct panel_input *input; struct ortek_repeat repeat; int dongle;
     struct ortek_mouse_state mouse;
     unsigned mouse_sent;
+    struct rc6_mce_repeat hp_repeat;
 };
+static void hp_received(void *opaque,unsigned key,unsigned toggle)
+{
+    struct ir_context *ctx=opaque;
+    const char *seq=NULL;int repeat=0;
+    switch(key) {
+    case 0x00:seq="0";break;case 0x01:seq="1";break;
+    case 0x02:seq="2";break;case 0x03:seq="3";break;
+    case 0x04:seq="4";break;case 0x05:seq="5";break;
+    case 0x06:seq="6";break;case 0x07:seq="7";break;
+    case 0x08:seq="8";break;case 0x09:seq="9";break;
+    case 0x0a:seq="BackSpace";break;case 0x0b:seq="Return";break;
+    case 0x0c:seq="s";break;case 0x0d:seq="XF86HomePage";break;
+    case 0x0e:seq="XF86AudioMute";break;case 0x0f:seq="i";break;
+    case 0x10:seq="XF86AudioRaiseVolume";repeat=1;break;
+    case 0x11:seq="XF86AudioLowerVolume";repeat=1;break;
+    case 0x12:seq="Prior";repeat=1;break;
+    case 0x13:seq="Next";repeat=1;break;
+    case 0x14:seq="f";repeat=1;break;case 0x15:seq="r";repeat=1;break;
+    case 0x16:seq="p";break;case 0x17:seq="ctrl+r";break;
+    case 0x18:seq="space";break;case 0x19:seq="x";break;
+    case 0x1a:seq="XF86AudioNext";break;case 0x1b:seq="XF86AudioPrev";break;
+    case 0x1c:seq="numbersign";break;case 0x1d:seq="KP_Multiply";break;
+    case 0x1e:seq="Up";repeat=1;break;case 0x1f:seq="Down";repeat=1;break;
+    case 0x20:seq="Left";repeat=1;break;case 0x21:seq="Right";repeat=1;break;
+    case 0x22:seq="Return";break;case 0x23:seq="Escape";break;
+    case 0x24:seq="d";break;case 0x26:seq="e";break;
+    case 0x5a:seq="t";break;case 0x6e:case 0x81:seq="space";break;
+    default:break;
+    }
+    int emit=rc6_mce_action(&ctx->hp_repeat,key,toggle,monotonic_seconds(),repeat);
+    if(emit) fprintf(stderr,"HP RC6 command=0x%02x toggle=%u mapping=%s receiver=LCD\n",
+        key,toggle,seq?seq:"unmapped");
+    if(emit && seq && ctx->input) panel_input_tap(ctx->input,seq);
+}
 static int ortek_dongle_present(void)
 {
     glob_t paths; int present=0;
@@ -482,6 +518,7 @@ int panel_run(usblcd_operations *lcd)
     DBusConnection *bus = NULL;
     DBusPendingCall *pending = NULL;
     struct ortek_decoder ortek = {0}, mouse_decoder = {0};
+    struct rc6_mce_decoder hp_decoder = {0};
     struct ir_context ir = {0};
     double next_dongle_check=0;
     ortek_load_map();
@@ -618,6 +655,7 @@ int panel_run(usblcd_operations *lcd)
             double received_at=monotonic_seconds();
             ortek_feed(&ortek,event->data,event->length,received_at,ortek_received,&ir);
             ortek_mouse_feed(&mouse_decoder,event->data,event->length,received_at,ortek_mouse_received,&ir);
+            rc6_mce_feed(&hp_decoder,event->data,event->length,received_at,hp_received,&ir);
         }
         free(event->data);
         free(event);

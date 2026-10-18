@@ -18,6 +18,8 @@ if pkg-config --exists xrandr; then
 fi
 
 test_flags="-g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer -ffunction-sections -fdata-sections -Wl,--gc-sections"
+gcc $common $test_flags -o build/test-rc6-mce test-rc6-mce.c
+ASAN_OPTIONS=detect_leaks=1 ./build/test-rc6-mce test-data/hp-rc6-capture.log
 gcc $common $test_flags -o build/test-input test-input.c src/input.c
 gcc $common -o build/test-input-live test-input-live.c src/input.c src/display-monitor.c
 ASAN_OPTIONS=detect_leaks=1 ./build/test-input
